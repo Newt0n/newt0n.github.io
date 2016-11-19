@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-11-19T09:09:06.000Z</updated>
+  <updated>2016-11-19T09:20:43.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,14 +16,14 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>如何避开 Go 中的各种陷阱</title>
+    <title>如何避开 Go 中的各种陷阱 [译]</title>
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T14:27:54.000Z</published>
-    <updated>2016-11-19T09:09:06.000Z</updated>
+    <updated>2016-11-19T09:20:43.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
-<p>原文地址：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a><br>原文作者：<a href="https://divan.github.io/" target="_blank" rel="external">divan</a></p>
+<p>英文原文地址：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>
 </blockquote>
 <h5 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h5><p>维基百科对「坑」的定义（原文中叫 <code>Gotcha</code>）：</p>
 <blockquote>
@@ -128,39 +128,12 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;原文地址：&lt;a href=&quot;https://divan.github.io/posts/avoid_gotchas/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How to avoid Go gotchas&lt;/a&gt;&lt;br&gt;原文
+&lt;p&gt;英文原文地址：&lt;a href=&quot;https://divan.github.io/posts/avoid_gotchas/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How to avoid Go gotchas&lt;/a&gt;&lt;/p&gt;
     
     </summary>
     
     
       <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2015/07/08/hello-world/"/>
-    <id>http://yoursite.com/2015/07/08/hello-world/</id>
-    <published>2015-07-07T16:17:44.000Z</published>
-    <updated>2015-07-07T16:17:44.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;http://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;http://hexo.io
-    
-    </summary>
-    
     
   </entry>
   
