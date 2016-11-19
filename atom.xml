@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-11-19T09:20:43.000Z</updated>
+  <updated>2016-11-19T09:51:39.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T14:27:54.000Z</published>
-    <updated>2016-11-19T09:20:43.000Z</updated>
+    <updated>2016-11-19T09:51:39.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>英文原文地址：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>
@@ -86,7 +86,8 @@
 <p>很显然这样就会存在两个被指向的数组，原有的和新分配的。是不是嗅到了一丝「坑」的味道？原来的数组如果没有被其他的切片指向的话稍后就会被垃圾回收机制释放掉。在这个例子里，实际上就存在一个 append 操作引发的坑。如果我们创建了一个子切片 <code>b</code>，然后对 <code>a</code> 切片 append 一个值，这两个切片还会共同指向同一个数组么？<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">32</span>)</div><div class="line">b := a[<span class="number">1</span>:<span class="number">16</span>]</div><div class="line">a = <span class="built_in">append</span>(a, <span class="number">1</span>)</div><div class="line">a[<span class="number">2</span>] = <span class="number">42</span></div></pre></td></tr></table></figure></p>
 <img src="/2016/11/07/如何避开-Go-中的各种陷阱/append2.png" alt="append2" title="append2">
 <p>通过图示结合我们上面所说的，切片 <code>a</code> 和 <code>b</code> 会分别指向两个不同的数组，这对初学者来说可能有点反直觉。所以，使用子切片的时候要格外小心，尤其是伴随着 append 操作的时候，这算是一条经验之谈。</p>
-<p>顺便说下，<code>append</code> 对切片扩容时，如果大小在 1024 字节以内，每次都会以双倍的大小来申请内存，但如果超过了 1024 字节则会使用所谓的 <a href="src/runtime/msize.go">memory size classes</a> 来保证增长的容量不会大于当前容量的 12.5%。因为对于大小为 32 字节的数组一次请求 64 字节的内存是没什么问题的，但如果切片的容量为 4GB 或更多，这时候添加一个新元素如果直接多分配出 4GB 的内存则显得代价太大，上面的规则就是考虑到了这样的情况。</p>
+<div class="tip"><br><code>append</code> 对切片扩容时，如果大小在 1024 字节以内，每次都会以双倍的大小来申请内存，但如果超过了 1024 字节则会使用所谓的 <a href="src/runtime/msize.go">memory size classes</a> 来保证增长的容量不会大于当前容量的 12.5%。因为对于大小为 32 字节的数组一次请求 64 字节的内存是没什么问题的，但如果切片的容量为 4GB 或更多，这时候添加一个新元素如果直接多分配出 4GB 的内存则显得代价太大，上面的规则就是考虑到了这样的情况。<br></div>
+
 <h1 id="接口（Interfaces）"><a href="#接口（Interfaces）" class="headerlink" title="接口（Interfaces）"></a>接口（Interfaces）</h1><p>这是对很多人来说最容易困惑的部分。需要花费不少时间来掌握和理解如何在 Go 里正确的使用接口，尤其是对在其他面向对象语言里有着惨痛经验的程序员来说。造成这种困惑的一个根源就是 <code>nil</code> 这个关键字在接口的上下文里会总是有着不同的含义。</p>
 <p>为了理解这一部分，让我们再来看看源码。<br>接口的底层实现里到底有什么？这里是一段源码 <a href="https://golang.org/src/runtime/runtime2.go#L143" target="_blank" rel="external">src/runtime/runtime2.go</a> 的摘抄：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> iface <span class="keyword">struct</span> &#123;</div><div class="line">    tab  *itab</div><div class="line">    data unsafe.Pointer</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>itab</code> 表示 <em>interface table</em>，它是一个保存接口和底层类型所需元数据的数据结构:</p>
