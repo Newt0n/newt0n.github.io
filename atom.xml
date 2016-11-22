@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-11-20T12:10:44.000Z</updated>
+  <updated>2016-11-22T02:32:27.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T14:27:54.000Z</published>
-    <updated>2016-11-20T12:10:44.000Z</updated>
+    <updated>2016-11-22T02:32:27.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>英文原文：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>
@@ -29,8 +29,8 @@
 <blockquote>
 <p>a gotcha is a valid construct in a system, program or programming language that works as documented but is counter-intuitive and almost invites mistakes because it is both easy to invoke and unexpected or unreasonable in its outcome<br>(source: <a href="https://en.wikipedia.org/wiki/Gotcha_(programming" target="_blank" rel="external">wikipedia</a>))</p>
 </blockquote>
-<p>Go 语言有一些我们常说的「坑」，有<a href="https://go-traps.appspot.com" target="_blank" rel="external">不少</a>优秀的<a href="http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/index.html" target="_blank" rel="external">文章</a>解释讨论过这些「坑」。这些文章所讨论的东西非常重要，尤其对 Go 的初学者来说，时不时就有人掉进这些小「坑」里。</p>
-<p>但有个问题让我困惑了很久，为什么我几乎没碰到过这些文章里讨论的绝大部分「坑」？真的，大多数比较知名的比如 “nil interface” 或者 “slice append” 等我从来就没觉得困惑过。我从开始使用 Go 一直到现在总是以某种方式避开了这些形形色色的问题。</p>
+<p>Go 语言有一些我们常说的「坑」，有<a href="https://go-traps.appspot.com" target="_blank" rel="external">不少</a>优秀的<a href="http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/index.html" target="_blank" rel="external">文章</a>讨论过这些「坑」。这些文章所讨论的东西非常重要，尤其对 Go 的初学者来说，一不小心就掉进了这些「坑」里。</p>
+<p>但有个问题让我困惑了很久，为什么我几乎没碰到过这些文章里讨论的大部分「坑」？真的，大多数比较知名的比如 “nil interface” 或者 “slice append” 等我从来就没觉得困惑过。我从开始使用 Go 一直到现在总是以某种方式避开了这些形形色色的问题。</p>
 <p>后来发现，我足够幸运的读了不少解释 Go 数据结构内部实现的文章并且学习了一些 Go 内部运行原理的基础知识。这些知识足够让我对 Go 有了深刻的认识，同时也避免了掉进各种各样的坑里。</p>
 <p>记住维基百科的定义，<em>「坑 是…有效的构造…但同时是反直觉的」</em><br>所以，你只有两个选项：</p>
 <ul>
@@ -106,7 +106,7 @@
 <img src="/2016/11/07/如何避开-Go-中的各种陷阱/eface.png" alt="空接口" title="空接口">
 <p>空接口 <code>interface{}</code> 有个比较蛋疼的问题是，不能方便的把接口切片赋值给混合类型的切片，反之亦然。比如：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">foo</span><span class="params">()</span> []<span class="title">interface</span></span>&#123;&#125; &#123;</div><div class="line">    <span class="keyword">return</span> []<span class="keyword">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这段代码将导致一个编译错误：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ go build</div><div class="line">cannot use []int literal (<span class="built_in">type</span> []int) as <span class="built_in">type</span> []interface &#123;&#125; <span class="keyword">in</span> <span class="built_in">return</span> argument</div></pre></td></tr></table></figure></p>
-<p>一开始这会很令人困惑。为什么我们可以在单个变量时直接做转换，而在切片类型里却不行？一旦我们知道了空接口本质上是什么（再看一眼上面的图示），就会十分清楚缘由，这样的『转换』实在是一个成本非常高的操作，涉及到分配大量的内存以及 O(n) 左右的时间和空间复杂度。而且 Go 的设计原则中有一条就是 <strong>如果需要做一些开销很昂贵的操作 - 光明正大的做（显式而非隐式的做）</strong>。<br><img src="/2016/11/07/如何避开-Go-中的各种陷阱/eface_slice.png" alt="切片接口" title="切片接口"></p>
+<p>一开始这会很令人困惑。为什么我们可以在单个变量时直接做转换，而在切片类型里却不行？一旦我们知道了空接口本质上是什么（再看一眼上面的图示），就会十分清楚缘由，这样的『转换』实在是一个成本非常高的操作，涉及到分配大量的内存以及 O(n) 左右的时间和空间复杂度。而且 Go 的设计原则中有一条就是 <strong>如果需要做一些开销很大的操作 - 光明正大的做（显式而非隐式的做）</strong>。<br><img src="/2016/11/07/如何避开-Go-中的各种陷阱/eface_slice.png" alt="切片接口" title="切片接口"></p>
 <h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>不是每个坑都需要通过学习 Go 的内部实现来了解透彻。有一些仅仅只是因为过去的经验和 Go 的玩法有些不一样，毕竟我们每个人或多或少都有着不同的背景和经验。不过，只要稍微深入的理解 Go 的内部工作原理，就能避免掉进绝大多数陷阱里。<br>希望本篇文章里的各种解释可以帮大家建立起对 Go 程序内部运行机制的直觉印象，相信这些知识可以帮助我们成为更棒的开发者。Go 是人类的好朋友，了解更多一点更深一点并不会有什么损失 :)</p>
 <p>如果还想更多的了解 Go 的内部实现，我精选了一些文章列在这里：</p>
 <ul>
