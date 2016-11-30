@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-11-22T02:32:27.000Z</updated>
+  <updated>2016-11-30T07:29:52.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T14:27:54.000Z</published>
-    <updated>2016-11-22T02:32:27.000Z</updated>
+    <updated>2016-11-30T07:29:52.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>英文原文：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>
@@ -80,13 +80,13 @@
 <p>这关于 Go 切片的一个很常见的坑，你很可能无法准确的预料为了使用这个切片到底耗费了多少内存。但一旦你脑海里有了关于切片内部实现的可视化表示，我敢打赌几乎下次遇到这样的场景时你会信心十足。</p>
 <h1 id="Append"><a href="#Append" class="headerlink" title="Append"></a>Append</h1><p>聊完切片本身，接下来我们看看切片的内置函数 <code>append()</code> 。它本质上的功能就是把一个元素值添加到切片中，但在内部实现里，为了在必要的时候做到智能高效的分配内存，它还做了不少复杂的操作。</p>
 <p>看看下面这段代码:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">32</span>)</div><div class="line">a = <span class="built_in">append</span>(a, <span class="number">1</span>)</div></pre></td></tr></table></figure></p>
-<p>还记得 <code>cap</code> - 切片的容量么？容量代表着 <em>切片可以达到的最大容量</em>。<code>append</code> 会检查切片是否还有足够的容量供扩展，如果够则为切片分配更多的内存。分配内存是一个开销非常大的操作，所以当你使用 <code>append</code> 向切片添加一个 1 字节大小的元素，实际上 <code>append</code> 会尝试一次分配 32 字节，且每次扩容都会是原有容量的两倍。这是因为一次分配更多的内存通常都比多次分配少量内存的开销更小且速度更快。</p>
+<p>还记得 <code>cap</code> - 切片的容量么？容量代表着 <em>切片可以达到的最大容量</em>。<code>append</code> 会检查切片的容量是否还允许扩展，如果可以则为切片分配更多的内存。分配内存是一个开销非常大的操作，所以当你使用 <code>append</code> 向切片添加一个 1 字节大小的元素，实际上 <code>append</code> 会尝试一次分配 32 字节，且每次扩容都会是原有容量的两倍。这是因为一次分配更多的内存通常都比多次分配少量内存的开销更小且速度更快。</p>
 <p>这里令人困惑的是，由于各种原因，通常情况下分配更多的内存意味着首先在一个不同的内存地址申请一块新的足够大的内存空间，然后从当前的内存地址把数据复制到新的内存块中。也就是说切片所指向的数组的地址也会被改变。可视化表示如下：</p>
 <img src="/2016/11/07/如何避开-Go-中的各种陷阱/append.png" alt="append" title="append">
 <p>很显然这样就会存在两个被指向的数组，原有的和新分配的。是不是嗅到了一丝「坑」的味道？原来的数组如果没有被其他的切片指向的话稍后就会被垃圾回收机制释放掉。在这个例子里，实际上就存在一个 append 操作引发的坑。如果我们创建了一个子切片 <code>b</code>，然后对 <code>a</code> 切片 append 一个值，这两个切片还会共同指向同一个数组么？<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">32</span>)</div><div class="line">b := a[<span class="number">1</span>:<span class="number">16</span>]</div><div class="line">a = <span class="built_in">append</span>(a, <span class="number">1</span>)</div><div class="line">a[<span class="number">2</span>] = <span class="number">42</span></div></pre></td></tr></table></figure></p>
 <img src="/2016/11/07/如何避开-Go-中的各种陷阱/append2.png" alt="append2" title="append2">
 <p>通过图示结合我们上面所说的，切片 <code>a</code> 和 <code>b</code> 会分别指向两个不同的数组，这对初学者来说可能有点反直觉。所以，使用子切片的时候要格外小心，尤其是伴随着 append 操作的时候，这算是一条经验之谈。</p>
-<div class="tip"><br><code>append</code> 对切片扩容时，如果大小在 1024 字节以内，每次都会以双倍的大小来申请内存，但如果超过了 1024 字节则会使用所谓的 <a href="src/runtime/msize.go">memory size classes</a> 来保证增长的容量不会大于当前容量的 12.5%。因为对于大小为 32 字节的数组一次请求 64 字节的内存是没什么问题的，但如果切片的容量为 4GB 或更多，这时候添加一个新元素如果直接多分配出 4GB 的内存则显得代价太大，上面的规则就是考虑到了这样的情况。<br></div>
+<div class="tip"><br><code>append</code> 对切片扩容时，如果大小在 1024 字节以内，每次都会以双倍的大小来申请内存，但如果超过了 1024 字节则会使用所谓的 <a href="https://golang.org/src/runtime/msize.go" target="_blank" rel="external">memory size classes</a> 来保证增长的容量不会大于当前容量的 12.5%。因为对于大小为 32 字节的数组一次请求 64 字节的内存是没什么问题的，但如果切片的容量为 4GB 或更多，这时候添加一个新元素如果直接多分配出 4GB 的内存则显得代价太大，上面的规则就是考虑到了这样的情况。<br></div>
 
 <h1 id="接口（Interfaces）"><a href="#接口（Interfaces）" class="headerlink" title="接口（Interfaces）"></a>接口（Interfaces）</h1><p>这是对很多人来说最容易困惑的部分。需要花费不少时间来掌握和理解如何在 Go 里正确的使用接口，尤其是对在其他面向对象语言里有着惨痛经验的程序员来说。造成这种困惑的一个根源就是 <code>nil</code> 这个关键字在接口的上下文里会总是有着不同的含义。</p>
 <p>为了理解这一部分，让我们再来看看源码。<br>接口的底层实现里到底有什么？这里是一段源码 <a href="https://golang.org/src/runtime/runtime2.go#L143" target="_blank" rel="external">src/runtime/runtime2.go</a> 的摘抄：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> iface <span class="keyword">struct</span> &#123;</div><div class="line">    tab  *itab</div><div class="line">    data unsafe.Pointer</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
