@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-11-30T07:29:52.000Z</updated>
+  <updated>2016-12-10T17:32:01.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T14:27:54.000Z</published>
-    <updated>2016-11-30T07:29:52.000Z</updated>
+    <updated>2016-12-10T17:32:01.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>英文原文：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>
@@ -37,7 +37,7 @@
 <li>“fix” 这门语言</li>
 <li>fix 自己的直觉</li>
 </ul>
-<p>第二种显然是更好的选择，一旦你脑中有了一副清晰的图像描绘了切片或者接口在底层是如何运作的，根本不可能再掉进那些相关的陷阱里。</p>
+<p>第二种显然是更好的选择，一旦你脑中有了一副清晰的图像描绘了切片或者接口在底层是如何运作的，根本不可能再掉进那些陷阱里。</p>
 <p>这样的学习方式对我而言是有用的，我想对其他人也同样适用。这也是为什么我决定在这篇文章里整理一些关于 Go 内部实现的基础知识，希望能帮助其他人对各种数据结构在内存中的表示建立起清晰的直觉。</p>
 <p>让我们从一些基础的开始：</p>
 <ul>
@@ -52,11 +52,11 @@
 <p>作为热身，我们先对 Go 里最基础的类型做可视化：<br><img src="/2016/11/07/如何避开-Go-中的各种陷阱/basic_types.png" alt="基础类型" title="基础类型"><br>假设你在一台 32 位的机器上 <em>(我知道现在你可能只有 64 位的机器了…)</em>, 可以清楚的看到 <code>int64</code> 的内存占用是 <code>int32</code> 的两倍。</p>
 <p>指针的内部表示稍微复杂一点，它占用一块内存，包含了一个指向其他内存块的内存地址，这个地址存储着实际的数据。有个术语叫 <em>『引用指针』</em> ，实际上它指的是 <em>『通过存储在指针变量里的地址取到实际指向的内存块』</em>。可以想象一下指针在内存中的表示：</p>
 <img src="/2016/11/07/如何避开-Go-中的各种陷阱/pointers.png" alt="指针" title="指针">
-<p>地址在内存里通常用十六进制表示，像图中标识的 <em>“0x…”</em> 这样。先记住『指针的值』存放在一个地方，『指针指向的数据』存放在另一个地方，这一点会有助于我们后面的理解。</p>
-<p>对于没有指针相关知识基础的 Go 新手来说，很容混淆值函数参数的『值传递』。你可能已经知道，Go 里所有的传参都是『按值』传递，也就是通过复制来实现传参。<br>图示如下：</p>
+<p>地址在内存里通常用十六进制表示，像图中标识的 <em>“0x…”</em> 这样。先记住，『指针的值』存放在一个地方，『指针指向的数据』存放在另一个地方，这一点会有助于我们后面的理解。</p>
+<p>对于没有指针相关知识的 Go 新手来说，很容混淆值函数参数的『值传递』。你可能已经知道，Go 里所有的传参都是『按值』传递，也就是通过复制来实现传参。<br>图示如下：</p>
 <img src="/2016/11/07/如何避开-Go-中的各种陷阱/func_params.png" alt="函数参数" title="函数参数">
-<p>在第一个例子里，复制了所有的内存块 - 但在实际情况里，基本都会超过 2 个甚至到 200 万个内存块，<br>如果必须全部复制一份的话将会是成本非常高的操作。而在第二个例子里，只需要复制包含了实际数据内存地址的那一块内存，这样做非常高效而且成本很低。</p>
-<p>现在我们可以看到，第一个例子里如果改变 <code>Foo()</code> 方法中的 <code>p</code> 变量并不会修改原始数据的内容，但在第二个例子里则肯定会修改 <code>p</code> 所指向的原始数据的内存块。</p>
+<p>在第一个例子里，复制了所有的内存块 - 但实际情况里用到的变量基本都会超过 2 个甚至 200 万个内存块，如果全部都复制一份的话将会是成本非常高的操作。而在第二个例子里，只需要复制包含了实际数据内存地址的那一块内存，这样做非常高效而且成本很低。</p>
+<p>显然，第一个例子里如果改变 <code>Foo()</code> 方法中的 <code>p</code> 变量并不会修改原始数据的内容，但在第二个例子里则肯定会修改 <code>p</code> 所指向的原始数据的内存块。</p>
 <p>理解了关键的内部实现将会帮你避开大多数的坑，接下来让我们再深入一点。</p>
 <h1 id="数组和切片-Arrays-and-Slices"><a href="#数组和切片-Arrays-and-Slices" class="headerlink" title="数组和切片 (Arrays and Slices)"></a>数组和切片 (Arrays and Slices)</h1><p>初学的时候一般都会对切片和数组感到混淆和困惑。所以我们先来看看数组。</p>
 <h3 id="数组-Arrays"><a href="#数组-Arrays" class="headerlink" title="数组 (Arrays)"></a>数组 (Arrays)</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr [<span class="number">5</span>]<span class="keyword">int</span></div><div class="line"><span class="keyword">var</span> arr [<span class="number">5</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;</div><div class="line"><span class="keyword">var</span> arr [...]<span class="keyword">int</span>&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;</div></pre></td></tr></table></figure>
