@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-09T06:20:39.000Z</updated>
+  <updated>2017-04-09T06:25:43.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/04/06/Go-Range-%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0/"/>
     <id>http://yoursite.com/2017/04/06/Go-Range-内部实现/</id>
     <published>2017-04-06T11:19:57.000Z</published>
-    <updated>2017-04-09T06:20:39.000Z</updated>
+    <updated>2017-04-09T06:25:43.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>原文：<a href="https://garbagecollected.org/2017/02/22/go-range-loop-internals/" target="_blank" rel="external">Go Range Loop Internals</a></p>
@@ -100,7 +100,7 @@
 <p>所以这些到底有什么 luǎn 用？下面的例子着重标记出了一些不同点：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 复制整个数组</span></div><div class="line"><span class="keyword">var</span> a [<span class="number">10</span>]<span class="keyword">int</span></div><div class="line">acopy := a </div><div class="line"></div><div class="line"><span class="comment">// 只复制了 slice 的结构体，并没有复制成员指针指向的数组</span></div><div class="line">s := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>)</div><div class="line">scopy := s</div><div class="line"></div><div class="line"><span class="comment">// 只复制了 map 的指针</span></div><div class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</div><div class="line">mcopy := m</div></pre></td></tr></table></figure>
 <p>所以，如果要在 range 循环开始前把一个数组表达式赋值给一个变量（保证表达式只 evaluate 一次），就会复制整个数组。</p>
-<h3 id="第三步-Go-编辑器源码"><a href="#第三步-Go-编辑器源码" class="headerlink" title="第三步: Go 编辑器源码"></a>第三步: Go 编辑器源码</h3><p>偷懒如我直接 google 了一下 Go 的编译器源码。首先发现的是 GCC 版本的编译器。我们关心的和 range 有关的部分出现在 <code>statements.cc</code>，<a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5384" target="_blank" rel="external">就像注释里写的</a>：</p>
+<h2 id="第三步-Go-编辑器源码"><a href="#第三步-Go-编辑器源码" class="headerlink" title="第三步: Go 编辑器源码"></a>第三步: Go 编辑器源码</h2><p>偷懒如我直接 google 了一下 Go 的编译器源码。首先发现的是 GCC 版本的编译器。我们关心的和 range 有关的部分出现在 <code>statements.cc</code>，<a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5384" target="_blank" rel="external">就像注释里写的</a>：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Arrange to do a loop appropriate for the type.  We will produce</span></div><div class="line"><span class="comment">//   for INIT ; COND ; POST &#123;</span></div><div class="line"><span class="comment">//           ITER_INIT</span></div><div class="line"><span class="comment">//           INDEX = INDEX_TEMP</span></div><div class="line"><span class="comment">//           VALUE = VALUE_TEMP // If there is a value</span></div><div class="line"><span class="comment">//           original statements</span></div><div class="line"><span class="comment">//   &#125;</span></div></pre></td></tr></table></figure>
 <p>现在终于有点眉目了。<code>range</code> 循环在内部实现上实际就是 C 风格循环的语法糖，意料之外而又在情理之中。编译器会对每一种 <code>range</code> 支持的类型做专门的 “<strong>语法糖还原</strong>”。比如，</p>
 <p><a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5501" target="_blank" rel="external">数组</a>：</p>
@@ -128,14 +128,14 @@
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <p>和上面的例子类似，在循环开始前数组被赋值给了一个临时变量，在对<strong>数组</strong>做 <code>range</code> 循环时临时变量里存放的是<strong>整个数组的副本</strong>，对原数组的操作不会反映在副本上。而在对<strong>数组指针</strong>做 <code>range</code> 循环时临时变量存放的是<strong>指针的副本</strong>，操作的也是同一块内存空间。</p>
-<h3 id="附-maps"><a href="#附-maps" class="headerlink" title="附: maps"></a>附: maps</h3><p>在规范文档里我们读到：</p>
+<h2 id="附-maps"><a href="#附-maps" class="headerlink" title="附: maps"></a>附: maps</h2><p>在规范文档里我们读到：</p>
 <ul>
 <li>在 <code>range</code> 循环里对 <code>maps</code> 做添加或删除元素的操作是安全的。</li>
 <li>如果在循环中对 <code>maps</code> 添加了一个元素，那么这个元素并不一定会出现在后续的迭代中。</li>
 </ul>
 <p><strong>对于第一点</strong>，我们知道 <code>maps</code> 实际上是结构体的指针。循环开始前，只会复制指针而不是内部的数据结构，因此在循环中添加或删除元素所操作的内存空间和原变量一致，合情合理。</p>
 <p>那<strong>为什么在后续的迭代中不一定能遍历到当前添加的元素</strong>？如果你知道哈希表是如何工作的（map 本质上就是哈希表），就会明白哈希表内部数组里的元素并不是以特定顺序存放。最后一个添加的元素有可能经过哈希后被放到了内部数组里的第一个索引位，我们确实没有办法预测当前添加的元素是否会出现在后续的迭代中，毕竟在添加元素的时候很可能已经遍历过了第一个索引位。因此，当前添加的元素是否能在后续迭代中遍历到，还是看编译器的心情吧 :D</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://golang.org/ref/spec" target="_blank" rel="external">The Go Programming Language Specification</a></li>
 <li><a href="https://blog.golang.org/go-slices-usage-and-internals" target="_blank" rel="external">Go slices: usage and internals</a></li>
 <li><a href="https://research.swtch.com/godata" target="_blank" rel="external">Go Data Structures</a></li>
