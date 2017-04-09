@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-06T08:43:18.000Z</updated>
+  <updated>2017-04-09T06:20:39.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,11 +16,156 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Go Range 内部实现[译]</title>
+    <link href="http://yoursite.com/2017/04/06/Go-Range-%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://yoursite.com/2017/04/06/Go-Range-内部实现/</id>
+    <published>2017-04-06T11:19:57.000Z</published>
+    <updated>2017-04-09T06:20:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>原文：<a href="https://garbagecollected.org/2017/02/22/go-range-loop-internals/" target="_blank" rel="external">Go Range Loop Internals</a></p>
+</blockquote>
+<p>Go 里的 <code>range</code> 循环用起来非常方便，但我总觉得它在不同情况下的表现有点神秘。现在看来我并不孤单：</p>
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/golang?src=hash" target="_blank" rel="external">#golang</a> pop quiz: does this program terminate?<br><br>func main() {<br>   v := []int{1, 2, 3}<br>   for i := range v {<br>       v = append(v, i)<br>  }<br>}</p>&mdash; Dαve Cheney (@davecheney) <a href="https://twitter.com/davecheney/status/819759166617108481" target="_blank" rel="external">January 13, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Today&#39;s <a href="https://twitter.com/hashtag/golang?src=hash" target="_blank" rel="external">#golang</a> gotcha: the two-value range over an array does a copy.  Avoid by ranging over the pointer instead.<a href="https://t.co/SbK667osvA" target="_blank" rel="external">https://t.co/SbK667osvA</a></p>&mdash; Damian Gryski (@dgryski) <a href="https://twitter.com/dgryski/status/816226596835225600" target="_blank" rel="external">January 3, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>在亲自测试了两位大神的例子后，现在我应该接受并记住这些事实，但死记硬背的东西总是容易忘。搞清楚背后的原理是什么，才更有利于加深理解和记忆，让我们开始吧。</p>
+<h2 id="第一步：读读该死的手册（Read-The-Fxxking-Manual）"><a href="#第一步：读读该死的手册（Read-The-Fxxking-Manual）" class="headerlink" title="第一步：读读该死的手册（Read The Fxxking Manual）"></a>第一步：读读该死的手册（Read The Fxxking Manual）</h2><p>先来读一下关于 <code>range</code> 的文档。在 Go 规范文档 “For statements with range clause” 一节可以找到关于 <code>for...range</code> 语法相关的说明。我不会把整个文档都拷贝过来，但会汇总一些有对我们有用的部分。</p>
+<p>首先，提醒一下自己我们要重点注意的是什么：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> a &#123;</div><div class="line">    fmt.Println(i)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="range-变量"><a href="#range-变量" class="headerlink" title="range 变量"></a>range 变量</h3><p>我们应该都知道，对于 range 左边的循环变量（上面这个例子里的 <code>i</code>）可以用以下方式来赋值：</p>
+<ul>
+<li>等号直接赋值 (<code>=</code>)</li>
+<li>短变量申明赋值 (<code>:=</code>)</li>
+</ul>
+<p>当然也可以什么都不写来完全忽略迭代遍历到的值。</p>
+<p>如果使用短变量申明（<code>:=</code>），Go 会在每次循环的迭代中重用申明的变量（只在循环内的作用域里有效）</p>
+<h3 id="range-表达式"><a href="#range-表达式" class="headerlink" title="range 表达式"></a>range 表达式</h3><p><code>range</code> 右边（上述例子里的 <code>a</code>）表达式的结果，可以是以下这些数据类型：</p>
+<ul>
+<li>数组</li>
+<li>指向数组的指针</li>
+<li>切片</li>
+<li>字符串</li>
+<li>map</li>
+<li>可以接收传输的 <code>channel</code>, 比如：<code>chan int or chan&lt;- int</code></li>
+</ul>
+<p><strong>range 表达式会在开始循环前被 evaluated 一次</strong>。但有一个例外情况：</p>
+<div class="tip"><br>如果对一个数组或者指向数组的指针做 <code>range</code> 并且只用到了数组索引：此时只有 <code>len(a)</code> 被 <strong>evaluated</strong>。<br></div>
+
+<p>仅仅只 evaluating <code>len(a)</code> 意味着表达式 <code>a</code> 可能在编译时被 evaluated 然后被编译器替换成了常量。规范文档里对 <code>len</code> 的解释：</p>
+<blockquote>
+<p>如果变量 <code>s</code> 是数组、指向数组的指针并且表达式里没有可以接收输入的 channel 或者函数调用（非常量），这些情况下 <code>s</code> 不会被 <strong>evaluated</strong>，<code>len(s)</code> 和 <code>cap(s)</code> 都是常量；除此之外 <code>len</code> 和 <code>cap</code> 的调用都不是常量并且 <code>s</code> 会被 <strong>evaluated</strong>。</p>
+</blockquote>
+<p>所以<strong>这里的 <code>evaluated</code> 到底是什么意思</strong>？很不幸文档里没有找到相关的说明。当然我猜其实就是完全的执行表达式直到其不能再被拆解。无论如何，最重要的是 <code>range</code> 表达式 在整个迭代开始前会被完全的执行一次。<strong>那么你会怎么让一个表达式只执行一次？把执行结果放在一个变量里！</strong> <code>range</code> 表达式的处理会不会也是这么做的？</p>
+<p>有趣的是规范文档里提到了一些对 <code>maps</code> (没有提到 <code>slices</code>) 做添加或删除操作的情况。</p>
+<p>如果 <code>map</code> 中的元素在还没有被遍历到时就被移除了，后续的迭代中这个元素就不会再出现。而如果 <code>map</code> 中的元素是在迭代过程中被添加的，那么在后续的迭代这个元素可能出现也可能被跳过。</p>
+<p>稍等一会我们再回来聊 <code>maps</code>。</p>
+<h2 id="第二步-range-支持的数据类型"><a href="#第二步-range-支持的数据类型" class="headerlink" title="第二步: range 支持的数据类型"></a>第二步: range 支持的数据类型</h2><p>如果我们假设在循环开始之前会先把 <code>range</code> 表达式复制给一个变量，那我们需要关注什么？答案是表达式结果的数据类型，让我们更近一步的看看 <code>range</code> 支持的数据类型。</p>
+<p>在我们开始前，先记住：在 Go 里，无论我们对什么赋值，都会被复制。如果赋值了一个指针，那我们就复制了一个指针副本。如果赋值了一个结构体，那我们就复制了一个结构体副本。往函数里传参也是同样的情况。好了，开始吧：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">谁的语法糖？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">array</td>
+<td style="text-align:center">数组</td>
+</tr>
+<tr>
+<td style="text-align:center">string</td>
+<td style="text-align:center">一个结构体：拥有一个变量 <code>len</code> 和一个指针指向背后的数组</td>
+</tr>
+<tr>
+<td style="text-align:center">slice</td>
+<td style="text-align:center">一个结构体：拥有一个变量 <code>len</code> 、一个变量 <code>cap</code> 和一个指针指向背后的数组</td>
+</tr>
+<tr>
+<td style="text-align:center">map</td>
+<td style="text-align:center">指向一个结构体的指针</td>
+</tr>
+<tr>
+<td style="text-align:center">channel</td>
+<td style="text-align:center">指向一个结构体的指针</td>
+</tr>
+</tbody>
+</table>
+<p>本文的末尾列出了一些参考，可以进一步了解这些数据类型的内部结构。</p>
+<p>所以这些到底有什么 luǎn 用？下面的例子着重标记出了一些不同点：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 复制整个数组</span></div><div class="line"><span class="keyword">var</span> a [<span class="number">10</span>]<span class="keyword">int</span></div><div class="line">acopy := a </div><div class="line"></div><div class="line"><span class="comment">// 只复制了 slice 的结构体，并没有复制成员指针指向的数组</span></div><div class="line">s := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>)</div><div class="line">scopy := s</div><div class="line"></div><div class="line"><span class="comment">// 只复制了 map 的指针</span></div><div class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</div><div class="line">mcopy := m</div></pre></td></tr></table></figure>
+<p>所以，如果要在 range 循环开始前把一个数组表达式赋值给一个变量（保证表达式只 evaluate 一次），就会复制整个数组。</p>
+<h3 id="第三步-Go-编辑器源码"><a href="#第三步-Go-编辑器源码" class="headerlink" title="第三步: Go 编辑器源码"></a>第三步: Go 编辑器源码</h3><p>偷懒如我直接 google 了一下 Go 的编译器源码。首先发现的是 GCC 版本的编译器。我们关心的和 range 有关的部分出现在 <code>statements.cc</code>，<a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5384" target="_blank" rel="external">就像注释里写的</a>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Arrange to do a loop appropriate for the type.  We will produce</span></div><div class="line"><span class="comment">//   for INIT ; COND ; POST &#123;</span></div><div class="line"><span class="comment">//           ITER_INIT</span></div><div class="line"><span class="comment">//           INDEX = INDEX_TEMP</span></div><div class="line"><span class="comment">//           VALUE = VALUE_TEMP // If there is a value</span></div><div class="line"><span class="comment">//           original statements</span></div><div class="line"><span class="comment">//   &#125;</span></div></pre></td></tr></table></figure>
+<p>现在终于有点眉目了。<code>range</code> 循环在内部实现上实际就是 C 风格循环的语法糖，意料之外而又在情理之中。编译器会对每一种 <code>range</code> 支持的类型做专门的 “<strong>语法糖还原</strong>”。比如，</p>
+<p><a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5501" target="_blank" rel="external">数组</a>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// The loop we generate:</span></div><div class="line"><span class="comment">//   len_temp := len(range)</span></div><div class="line"><span class="comment">//   range_temp := range</span></div><div class="line"><span class="comment">//   for index_temp = 0; index_temp &lt; len_temp; index_temp++ &#123;</span></div><div class="line"><span class="comment">//           value_temp = range_temp[index_temp]</span></div><div class="line"><span class="comment">//           index = index_temp</span></div><div class="line"><span class="comment">//           value = value_temp</span></div><div class="line"><span class="comment">//           original body</span></div><div class="line"><span class="comment">//   &#125;</span></div></pre></td></tr></table></figure>
+<p><a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5593" target="_blank" rel="external">切片</a>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//   for_temp := range</span></div><div class="line"><span class="comment">//   len_temp := len(for_temp)</span></div><div class="line"><span class="comment">//   for index_temp = 0; index_temp &lt; len_temp; index_temp++ &#123;</span></div><div class="line"><span class="comment">//           value_temp = for_temp[index_temp]</span></div><div class="line"><span class="comment">//           index = index_temp</span></div><div class="line"><span class="comment">//           value = value_temp</span></div><div class="line"><span class="comment">//           original body</span></div><div class="line"><span class="comment">//   &#125;</span></div></pre></td></tr></table></figure>
+<p>他们的共同点是：</p>
+<ul>
+<li>所有类型的 <code>range</code> 本质上都是 C 风格的循环</li>
+<li>遍历到的值会被赋值给一个临时变量</li>
+</ul>
+<p>这是 <a href="https://github.com/golang/gofrontend" target="_blank" rel="external">gofrontend</a>里的情况，据我所知大多数人使用的是 Go 发行版自带的 gc 编译器，看上去他们在这一点的处理上有着<a href="https://github.com/golang/go/blob/ea020ff3de9482726ce7019ac43c1d301ce5e3de/src/cmd/compile/internal/gc/range.go#L169" target="_blank" rel="external">完全相同的行为</a>。</p>
+<h2 id="我们所知道的"><a href="#我们所知道的" class="headerlink" title="我们所知道的"></a>我们所知道的</h2><ol>
+<li>循环变量在每一次迭代中都被赋值并会复用。</li>
+<li>可以在迭代过程中移除一个 map 里的元素或者向 map 里添加元素。添加的元素并不一定会在后续迭代中被遍历到。</li>
+<li>明确了这些之后，我们再回到开篇列出的例子上。</li>
+</ol>
+<h2 id="Dave-的推文"><a href="#Dave-的推文" class="headerlink" title="Dave 的推文"></a>Dave 的推文</h2><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/golang?src=hash" target="_blank" rel="external">#golang</a> pop quiz: does this program terminate?<br><br>func main() {<br>   v := []int{1, 2, 3}<br>   for i := range v {<br>       v = append(v, i)<br>  }<br>}</p>&mdash; Dαve Cheney (@davecheney) <a href="https://twitter.com/davecheney/status/819759166617108481" target="_blank" rel="external">January 13, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>这段代码之所以会终止是因为它其实可以粗略的翻译成类似下面的这段：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">for_temp := v</div><div class="line">len_temp := <span class="built_in">len</span>(for_temp)</div><div class="line"><span class="keyword">for</span> index_temp = <span class="number">0</span>; index_temp &lt; len_temp; index_temp++ &#123;</div><div class="line">        value_temp = for_temp[index_temp]</div><div class="line">        index = index_temp</div><div class="line">        value = value_temp</div><div class="line">        v = <span class="built_in">append</span>(v, index)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们知道切片实际上是一个结构体的语法糖，这个结构体有着一个指向数组的指针成员。在循环开始前对这个结构体生成副本然后赋值给 <code>for_temp</code>，后面的循环实际上是在对 <code>for_temp</code> 进行迭代。任何对于原始变量 <code>v</code> 本身（而非对其背后指向的数组）的更改都和生成的副本 <code>for_temp</code> 没有关系。但其背后指向的数组还是以指针的形式共享给 <code>v</code> 和 <code>for_temp</code>，所以 <code>v[i] = 1</code> 这样的语句仍然可以工作。</p>
+<h2 id="Damian-的推文"><a href="#Damian-的推文" class="headerlink" title="Damian 的推文"></a>Damian 的推文</h2><p><blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Today&#39;s <a href="https://twitter.com/hashtag/golang?src=hash" target="_blank" rel="external">#golang</a> gotcha: the two-value range over an array does a copy.  Avoid by ranging over the pointer instead.<a href="https://t.co/SbK667osvA" target="_blank" rel="external">https://t.co/SbK667osvA</a></p>&mdash; Damian Gryski (@dgryski) <a href="https://twitter.com/dgryski/status/816226596835225600" target="_blank" rel="external">January 3, 2017</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>和上面的例子类似，在循环开始前数组被赋值给了一个临时变量，在对<strong>数组</strong>做 <code>range</code> 循环时临时变量里存放的是<strong>整个数组的副本</strong>，对原数组的操作不会反映在副本上。而在对<strong>数组指针</strong>做 <code>range</code> 循环时临时变量存放的是<strong>指针的副本</strong>，操作的也是同一块内存空间。</p>
+<h3 id="附-maps"><a href="#附-maps" class="headerlink" title="附: maps"></a>附: maps</h3><p>在规范文档里我们读到：</p>
+<ul>
+<li>在 <code>range</code> 循环里对 <code>maps</code> 做添加或删除元素的操作是安全的。</li>
+<li>如果在循环中对 <code>maps</code> 添加了一个元素，那么这个元素并不一定会出现在后续的迭代中。</li>
+</ul>
+<p><strong>对于第一点</strong>，我们知道 <code>maps</code> 实际上是结构体的指针。循环开始前，只会复制指针而不是内部的数据结构，因此在循环中添加或删除元素所操作的内存空间和原变量一致，合情合理。</p>
+<p>那<strong>为什么在后续的迭代中不一定能遍历到当前添加的元素</strong>？如果你知道哈希表是如何工作的（map 本质上就是哈希表），就会明白哈希表内部数组里的元素并不是以特定顺序存放。最后一个添加的元素有可能经过哈希后被放到了内部数组里的第一个索引位，我们确实没有办法预测当前添加的元素是否会出现在后续的迭代中，毕竟在添加元素的时候很可能已经遍历过了第一个索引位。因此，当前添加的元素是否能在后续迭代中遍历到，还是看编译器的心情吧 :D</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://golang.org/ref/spec" target="_blank" rel="external">The Go Programming Language Specification</a></li>
+<li><a href="https://blog.golang.org/go-slices-usage-and-internals" target="_blank" rel="external">Go slices: usage and internals</a></li>
+<li><a href="https://research.swtch.com/godata" target="_blank" rel="external">Go Data Structures</a></li>
+<li>Inside the map implementation: <a href="https://docs.google.com/presentation/d/1CxamWsvHReswNZc7N2HMV7WPFqS8pvlPVZcDegdC_T4/edit#slide=id.g153a5e64a5_1_0" target="_blank" rel="external">slides</a> | <a href="https://www.youtube.com/watch?v=Tl7mi9QmLns" target="_blank" rel="external">video</a></li>
+<li>Understanding nil: <a href="https://speakerdeck.com/campoy/understanding-nilhttps://www.youtube.com/watch?v=ynoY2xz-F8s" target="_blank" rel="external">slides</a> | <a href="">video</a></li>
+<li><a href="https://golang.org/src/runtime/string.go" target="_blank" rel="external">string source code</a></li>
+<li><a href="https://golang.org/src/runtime/slice.go" target="_blank" rel="external">slice source code</a></li>
+<li><a href="https://golang.org/src/runtime/hashmap.go" target="_blank" rel="external">map source code</a></li>
+<li><a href="https://golang.org/src/runtime/chan.go" target="_blank" rel="external">channel source code</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;原文：&lt;a href=&quot;https://garbagecollected.org/2017/02/22/go-range-loop-internals/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Go Range Loop I
+    
+    </summary>
+    
+    
+      <category term="GO" scheme="http://yoursite.com/tags/GO/"/>
+    
+  </entry>
+  
+  <entry>
     <title>PHP 协程原理</title>
     <link href="http://yoursite.com/2017/02/10/PHP-%E5%8D%8F%E7%A8%8B%E5%8E%9F%E7%90%86/"/>
     <id>http://yoursite.com/2017/02/10/PHP-协程原理/</id>
     <published>2017-02-10T09:34:28.000Z</published>
-    <updated>2017-04-06T08:43:18.000Z</updated>
+    <updated>2017-04-06T10:18:33.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="多进程-线程"><a href="#多进程-线程" class="headerlink" title="多进程/线程"></a>多进程/线程</h2><p>最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始有了进程的概念。最早的服务器端程序一般都是 Accept 一个客户端连接就创建一个进程，然后子进程进入循环同步阻塞地与客户端连接进行交互，收发处理数据。</p>
 <p>多线程模式出现要晚一些，线程与进程相比更轻量，而且线程之间共享内存堆栈，所以不同的线程之间交互非常容易实现。比如实现一个聊天室，客户端连接之间可以交互，聊天室中的玩家可以任意的其他人发消息。用多线程模式实现非常简单，线程中可以直接向某一个客户端连接发送数据。而多进程模式就要用到管道、消息队列、共享内存等等统称进程间通信（IPC）复杂的技术才能实现。</p>
@@ -183,8 +328,8 @@
 <img src="/2017/02/10/PHP-协程原理/14913877605869.jpg" alt="14913877605869.jpg" title="">
 <h3 id="单任务改造"><a href="#单任务改造" class="headerlink" title="单任务改造"></a>单任务改造</h3><p>如果想将一个单进程任务改造成并发执行，我们可以选择改造成多进程或者协程：</p>
 <ul>
-<li>多进程，不改变任务执行的整体过程，在一个时间段内同时执行多个相同的代码段，调度权在 CPU，如果一个任务能独占一个 CPU 则可以实现并行。</li>
-<li>协程，把原有任务拆分成多个小任务，原有任务的执行流程被改变，调度权在进程自己，如果有 IO 并且可以实现异步，则可以实现并行。</li>
+<li><strong>多进程</strong>，不改变任务执行的整体过程，在一个时间段内同时执行多个相同的代码段，调度权在 CPU，如果一个任务能独占一个 CPU 则可以实现并行。</li>
+<li><strong>协程</strong>，把原有任务拆分成多个小任务，原有任务的执行流程被改变，调度权在进程自己，如果有 IO 并且可以实现异步，则可以实现并行。</li>
 </ul>
 <p><strong>多进程改造</strong></p>
 <img src="/2017/02/10/PHP-协程原理/14914233052018.jpg" alt="14914233052018.jpg" title="">
@@ -219,11 +364,11 @@
   </entry>
   
   <entry>
-    <title>如何避开 Go 中的各种陷阱</title>
+    <title>如何避开 Go 中的各种陷阱[译]</title>
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T09:34:28.000Z</published>
-    <updated>2017-04-06T08:14:33.000Z</updated>
+    <updated>2017-04-06T11:43:18.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>原文：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>

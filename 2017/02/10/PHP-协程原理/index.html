@@ -159,8 +159,8 @@
 <img src="/2017/02/10/PHP-协程原理/14913877605869.jpg" alt="14913877605869.jpg" title="">
 <h3 id="单任务改造"><a href="#单任务改造" class="headerlink" title="单任务改造"></a>单任务改造</h3><p>如果想将一个单进程任务改造成并发执行，我们可以选择改造成多进程或者协程：</p>
 <ul>
-<li>多进程，不改变任务执行的整体过程，在一个时间段内同时执行多个相同的代码段，调度权在 CPU，如果一个任务能独占一个 CPU 则可以实现并行。</li>
-<li>协程，把原有任务拆分成多个小任务，原有任务的执行流程被改变，调度权在进程自己，如果有 IO 并且可以实现异步，则可以实现并行。</li>
+<li><strong>多进程</strong>，不改变任务执行的整体过程，在一个时间段内同时执行多个相同的代码段，调度权在 CPU，如果一个任务能独占一个 CPU 则可以实现并行。</li>
+<li><strong>协程</strong>，把原有任务拆分成多个小任务，原有任务的执行流程被改变，调度权在进程自己，如果有 IO 并且可以实现异步，则可以实现并行。</li>
 </ul>
 <p><strong>多进程改造</strong></p>
 <img src="/2017/02/10/PHP-协程原理/14914233052018.jpg" alt="14914233052018.jpg" title="">
@@ -179,7 +179,7 @@
 <li><a href="http://www.laruence.com/2015/05/28/3038.html" target="_blank" rel="external">在PHP中使用协程实现多任务调度</a></li>
 <li><a href="http://rango.swoole.com/archives/508" target="_blank" rel="external">PHP 并发 IO 编程之路</a></li>
 </ul>
-</div></article></div></main><footer><div class="paginator"><a href="/2016/11/07/如何避开-Go-中的各种陷阱/" class="next">NEXT</a></div><div data-thread-key="2017/02/10/PHP-协程原理/" data-title="PHP 协程原理" data-url="http://yoursite.com/2017/02/10/PHP-协程原理/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"newt0n"};
+</div></article></div></main><footer><div class="paginator"><a href="/2017/04/06/Go-Range-内部实现/" class="prev">PREV</a><a href="/2016/11/07/如何避开-Go-中的各种陷阱/" class="next">NEXT</a></div><div data-thread-key="2017/02/10/PHP-协程原理/" data-title="PHP 协程原理" data-url="http://yoursite.com/2017/02/10/PHP-协程原理/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"newt0n"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
