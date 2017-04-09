@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-09T10:21:29.000Z</updated>
+  <updated>2017-04-09T10:32:05.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="http://yoursite.com/2017/04/06/Go-Range-%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0/"/>
     <id>http://yoursite.com/2017/04/06/Go-Range-内部实现/</id>
     <published>2017-04-06T11:19:57.000Z</published>
-    <updated>2017-04-09T10:21:29.000Z</updated>
+    <updated>2017-04-09T10:32:05.000Z</updated>
     
-    <content type="html"><![CDATA[<blockquote>
+    <content type="html"><![CDATA[<p>Go 里的 <code>for...range</code> 循环用起来非常方便，本篇讨论了多种不同情况下这一用法的表现及内部原理。<br><a id="more"></a></p>
+<blockquote>
 <p>原文：<a href="https://garbagecollected.org/2017/02/22/go-range-loop-internals/" target="_blank" rel="external">Go Range Loop Internals</a></p>
 </blockquote>
 <p>Go 里的 <code>range</code> 循环用起来非常方便，但我总觉得它在不同情况下的表现有点神秘。现在看来我并不孤单：</p>
@@ -150,8 +151,7 @@
     
     <summary type="html">
     
-      &lt;blockquote&gt;
-&lt;p&gt;原文：&lt;a href=&quot;https://garbagecollected.org/2017/02/22/go-range-loop-internals/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Go Range Loop I
+      &lt;p&gt;Go 里的 &lt;code&gt;for...range&lt;/code&gt; 循环用起来非常方便，本篇讨论了多种不同情况下这一用法的表现及内部原理。&lt;br&gt;
     
     </summary>
     
@@ -165,9 +165,10 @@
     <link href="http://yoursite.com/2017/02/10/PHP-%E5%8D%8F%E7%A8%8B%E5%8E%9F%E7%90%86/"/>
     <id>http://yoursite.com/2017/02/10/PHP-协程原理/</id>
     <published>2017-02-10T09:34:28.000Z</published>
-    <updated>2017-04-06T10:18:33.000Z</updated>
+    <updated>2017-04-09T10:33:23.000Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="多进程-线程"><a href="#多进程-线程" class="headerlink" title="多进程/线程"></a>多进程/线程</h2><p>最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始有了进程的概念。最早的服务器端程序一般都是 Accept 一个客户端连接就创建一个进程，然后子进程进入循环同步阻塞地与客户端连接进行交互，收发处理数据。</p>
+    <content type="html"><![CDATA[<p>实现 PHP 协程所要了解的基本内容。<br><a id="more"></a></p>
+<h2 id="多进程-线程"><a href="#多进程-线程" class="headerlink" title="多进程/线程"></a>多进程/线程</h2><p>最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始有了进程的概念。最早的服务器端程序一般都是 Accept 一个客户端连接就创建一个进程，然后子进程进入循环同步阻塞地与客户端连接进行交互，收发处理数据。</p>
 <p>多线程模式出现要晚一些，线程与进程相比更轻量，而且线程之间共享内存堆栈，所以不同的线程之间交互非常容易实现。比如实现一个聊天室，客户端连接之间可以交互，聊天室中的玩家可以任意的其他人发消息。用多线程模式实现非常简单，线程中可以直接向某一个客户端连接发送数据。而多进程模式就要用到管道、消息队列、共享内存等等统称进程间通信（IPC）复杂的技术才能实现。</p>
 <p><strong>最简单的多进程服务端模型</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$serv = stream_socket_server(<span class="string">"tcp://0.0.0.0:8000"</span>, $errno, $errstr) </div><div class="line"><span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Create server failed"</span>);</div><div class="line"></div><div class="line"><span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">	$conn = stream_socket_accept($serv);</div><div class="line">	<span class="keyword">if</span> (pcntl_fork() == <span class="number">0</span>) &#123;</div><div class="line">		$request = fread($conn);</div><div class="line">		<span class="comment">// do something</span></div><div class="line">		<span class="comment">// $response = "hello world";</span></div><div class="line">		fwrite($response);</div><div class="line">		fclose($conn);</div><div class="line">		<span class="keyword">exit</span>(<span class="number">0</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -352,7 +353,7 @@
     
     <summary type="html">
     
-      &lt;h2 id=&quot;多进程-线程&quot;&gt;&lt;a href=&quot;#多进程-线程&quot; class=&quot;headerlink&quot; title=&quot;多进程/线程&quot;&gt;&lt;/a&gt;多进程/线程&lt;/h2&gt;&lt;p&gt;最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始
+      &lt;p&gt;实现 PHP 协程所要了解的基本内容。&lt;br&gt;
     
     </summary>
     
@@ -368,9 +369,10 @@
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T09:34:28.000Z</published>
-    <updated>2017-04-06T11:43:18.000Z</updated>
+    <updated>2017-04-09T10:31:07.000Z</updated>
     
-    <content type="html"><![CDATA[<blockquote>
+    <content type="html"><![CDATA[<p>基于几种基本数据类型的内部实现，讨论 Go 里有哪些新手容易掉进去的 “坑“。<br><a id="more"></a></p>
+<blockquote>
 <p>原文：<a href="https://divan.github.io/posts/avoid_gotchas/" target="_blank" rel="external">How to avoid Go gotchas</a></p>
 </blockquote>
 <h5 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h5><p>维基百科对「坑」的定义（原文中叫 <code>Gotcha</code>）：</p>
@@ -507,9 +509,7 @@
     
     <summary type="html">
     
-      &lt;blockquote&gt;
-&lt;p&gt;原文：&lt;a href=&quot;https://divan.github.io/posts/avoid_gotchas/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;How to avoid Go gotchas&lt;/a&gt;&lt;/p&gt;
-&lt;/b
+      &lt;p&gt;基于几种基本数据类型的内部实现，讨论 Go 里有哪些新手容易掉进去的 “坑“。&lt;br&gt;
     
     </summary>
     
