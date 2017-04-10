@@ -365,11 +365,11 @@
   </entry>
   
   <entry>
-    <title>如何避开 Go 中的各种陷阱[译]</title>
+    <title>如何避开 Go 中的各种陷阱</title>
     <link href="http://yoursite.com/2016/11/07/%E5%A6%82%E4%BD%95%E9%81%BF%E5%BC%80-Go-%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E9%99%B7%E9%98%B1/"/>
     <id>http://yoursite.com/2016/11/07/如何避开-Go-中的各种陷阱/</id>
     <published>2016-11-07T09:34:28.000Z</published>
-    <updated>2017-04-10T03:33:07.000Z</updated>
+    <updated>2017-04-10T08:20:27.000Z</updated>
     
     <content type="html"><![CDATA[<p>基于几种基本数据类型的内部实现，讨论 Go 里有哪些新手容易掉进去的 “坑“。<br><a id="more"></a></p>
 <blockquote>
