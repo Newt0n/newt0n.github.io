@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-04-10T07:23:06.000Z</updated>
+  <updated>2017-04-10T12:52:11.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://newton.sh/2017/04/06/Go-Range-%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0/"/>
     <id>http://newton.sh/2017/04/06/Go-Range-内部实现/</id>
     <published>2017-04-06T11:19:57.000Z</published>
-    <updated>2017-04-10T07:23:06.000Z</updated>
+    <updated>2017-04-10T12:52:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>Go 里的 <code>for...range</code> 循环用起来非常方便，本篇讨论了多种不同情况下这一用法的表现及内部原理。<br><a id="more"></a></p>
 <blockquote>
@@ -101,7 +101,7 @@
 <p>所以这些到底有什么 luǎn 用？下面的例子着重标记出了一些不同点：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 复制整个数组</span></div><div class="line"><span class="keyword">var</span> a [<span class="number">10</span>]<span class="keyword">int</span></div><div class="line">acopy := a </div><div class="line"></div><div class="line"><span class="comment">// 只复制了 slice 的结构体，并没有复制成员指针指向的数组</span></div><div class="line">s := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>)</div><div class="line">scopy := s</div><div class="line"></div><div class="line"><span class="comment">// 只复制了 map 的指针</span></div><div class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</div><div class="line">mcopy := m</div></pre></td></tr></table></figure>
 <p>所以，如果要在 range 循环开始前把一个数组表达式赋值给一个变量（保证表达式只 evaluate 一次），就会复制整个数组。</p>
-<h2 id="第三步-Go-编辑器源码"><a href="#第三步-Go-编辑器源码" class="headerlink" title="第三步: Go 编辑器源码"></a>第三步: Go 编辑器源码</h2><p>偷懒如我直接 google 了一下 Go 的编译器源码。首先发现的是 GCC 版本的编译器。我们关心的和 range 有关的部分出现在 <code>statements.cc</code>，<a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5384" target="_blank" rel="external">就像注释里写的</a>：</p>
+<h2 id="第三步-Go-编译器源码"><a href="#第三步-Go-编译器源码" class="headerlink" title="第三步: Go 编译器源码"></a>第三步: Go 编译器源码</h2><p>偷懒如我直接 google 了一下 Go 的编译器源码。首先发现的是 GCC 版本的编译器。我们关心的和 range 有关的部分出现在 <code>statements.cc</code>，<a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5384" target="_blank" rel="external">就像注释里写的</a>：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Arrange to do a loop appropriate for the type.  We will produce</span></div><div class="line"><span class="comment">//   for INIT ; COND ; POST &#123;</span></div><div class="line"><span class="comment">//           ITER_INIT</span></div><div class="line"><span class="comment">//           INDEX = INDEX_TEMP</span></div><div class="line"><span class="comment">//           VALUE = VALUE_TEMP // If there is a value</span></div><div class="line"><span class="comment">//           original statements</span></div><div class="line"><span class="comment">//   &#125;</span></div></pre></td></tr></table></figure>
 <p>现在终于有点眉目了。<code>range</code> 循环在内部实现上实际就是 C 风格循环的语法糖，意料之外而又在情理之中。编译器会对每一种 <code>range</code> 支持的类型做专门的 “<strong>语法糖还原</strong>”。比如，</p>
 <p><a href="https://github.com/golang/gofrontend/blob/e387439bfd24d5e142874b8e68e7039f74c744d7/go/statements.cc#L5501" target="_blank" rel="external">数组</a>：</p>
