@@ -82,7 +82,7 @@
 <p><img src="/2016/11/07/如何避开-Go-中的各种陷阱/append.png" alt="append" title="append"></p>
 <p>很显然这样就会存在两个被指向的数组，原有的和新分配的。是不是嗅到了一丝「坑」的味道？原来的数组如果没有被其他的切片指向的话稍后就会被垃圾回收机制释放掉。在这个例子里，实际上就存在一个 append 操作引发的坑。如果我们创建了一个子切片 <code>b</code>，然后对 <code>a</code> 切片 append 一个值，这两个切片还会共同指向同一个数组么？  </p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">a := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">32</span>)</div><div class="line">b := a[<span class="number">1</span>:<span class="number">16</span>]</div><div class="line">a = <span class="built_in">append</span>(a, <span class="number">1</span>)</div><div class="line">a[<span class="number">2</span>] = <span class="number">42</span></div></pre></td></tr></table></figure>
-<p><img src="/2016/11/07/如何避开-Go-中的各种陷阱/append2.png" alt="append2" title="append2"></p>
+<p><img src="/2016/11/07/如何避开-Go-中的各种陷阱/append2.png" alt="append2" title="append2"><br>（译者注：图中 <code>b</code> 的 <code>cap</code> 值应为 31，子切片的 <code>cap</code> 应该等于起始位置到父切片末尾的容量）</p>
 <p>通过图示结合我们上面所说的，切片 <code>a</code> 和 <code>b</code> 会分别指向两个不同的数组，这对初学者来说可能有点反直觉。所以，使用子切片的时候要格外小心，尤其是伴随着 append 操作的时候，这算是一条经验之谈。</p>
 <div class="tip"><br><code>append</code> 对切片扩容时，如果大小在 1024 字节以内，每次都会以双倍的大小来申请内存，但如果超过了 1024 字节则会使用所谓的 <a href="https://golang.org/src/runtime/msize.go" target="_blank" rel="external">memory size classes</a> 来保证增长的容量不会大于当前容量的 12.5%。因为对于大小为 32 字节的数组一次请求 64 字节的内存是没什么问题的，但如果切片的容量为 4GB 或更多，这时候添加一个新元素如果直接多分配出 4GB 的内存则显得代价太大，上面的规则就是考虑到了这样的情况。<br></div>
 
