@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-04-21T02:42:52.000Z</updated>
+  <updated>2017-04-21T02:51:15.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/"/>
     <id>http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/</id>
     <published>2017-04-14T10:19:06.000Z</published>
-    <updated>2017-04-21T02:42:52.000Z</updated>
+    <updated>2017-04-21T02:51:15.000Z</updated>
     
-    <content type="html"><![CDATA[<p>说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。</p>
+    <content type="html"><![CDATA[<p>让 Mac 上的数据库管理客户端 Sequel Pro 有更好的 SQL 格式化功能。<br><a id="more"></a></p>
+<p>说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。</p>
 <p>在工具的选择上一向偏爱简洁够用就好，最初用 Mac 时反复比较了多个可选项最终选择了开源的 Sequel Pro 作为首选客户端，和之前在 Win 上主要用的 SQLyog 相比，界面操作之类的都可以习惯，唯独 SQL 格式化功能始终不能忍受。</p>
 <p>Sequel Pro 的 SQL 格式化功能以 Bundle 也就是插件的形式提供，使用菜单 <code>Bundles-&gt;Input Field-&gt;Format-&gt;Format SQL</code> 执行。</p>
 <img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14925125535553.jpg" alt="14925125535553.jpg" title="">
@@ -67,8 +68,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。&lt;/p&gt;
-&lt;p&gt;在工
+      &lt;p&gt;让 Mac 上的数据库管理客户端 Sequel Pro 有更好的 SQL 格式化功能。&lt;br&gt;
     
     </summary>
     
