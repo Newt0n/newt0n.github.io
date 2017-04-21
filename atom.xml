@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-04-21T08:03:35.000Z</updated>
+  <updated>2017-04-21T08:14:05.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/"/>
     <id>http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/</id>
     <published>2017-04-14T10:19:06.000Z</published>
-    <updated>2017-04-21T08:03:35.000Z</updated>
+    <updated>2017-04-21T08:14:05.000Z</updated>
     
     <content type="html"><![CDATA[<p>让 Mac 上的数据库管理客户端 Sequel Pro 有更好的 SQL 格式化功能。<br><a id="more"></a></p>
 <p>说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。</p>
@@ -65,6 +65,10 @@
 <blockquote>
 <p><a href="http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle.zip" target="_blank" rel="external">http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle.zip</a></p>
 </blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/sequelpro/sequelpro/issues/1988#issuecomment-60658598" target="_blank" rel="external">Update SQL formatter bundle for new API</a></li>
+<li><a href="https://sqlformat.org/" target="_blank" rel="external">SQLFormat</a></li>
+</ul>
 ]]></content>
     
     <summary type="html">
