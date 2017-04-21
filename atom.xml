@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-04-10T16:23:05.000Z</updated>
+  <updated>2017-04-21T02:25:25.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -14,6 +14,70 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Sequel Pro 实现更好的 SQL 格式化</title>
+    <link href="http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/"/>
+    <id>http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/</id>
+    <published>2017-04-14T10:19:06.000Z</published>
+    <updated>2017-04-21T02:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。</p>
+<p>在工具的选择上一向偏爱简洁够用就好，最初用 Mac 时反复比较了多个可选项最终选择了开源的 Sequel Pro 作为首选客户端，和之前在 Win 上主要用的 SQLyog 相比，界面操作之类的都可以习惯，唯独 SQL 格式化功能始终不能忍受。</p>
+<p>Sequel Pro 的 SQL 格式化功能以 Bundle 也就是插件的形式提供，使用菜单 <code>Bundles-&gt;Input Field-&gt;Format-&gt;Format SQL</code> 执行。</p>
+<img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14925125535553.jpg" alt="14925125535553.jpg" title="">
+<h3 id="修正自带-Bundle"><a href="#修正自带-Bundle" class="headerlink" title="修正自带 Bundle"></a>修正自带 Bundle</h3><p>官方版本自带的 Bundle 很可能无法开箱即用：</p>
+<img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14925128749849.png" alt="14925128749849.png" title="">
+<p>可以根据这个 Issue (<a href="https://github.com/sequelpro/sequelpro/issues/1988#issuecomment-60658598" target="_blank" rel="external">https://github.com/sequelpro/sequelpro/issues/1988#issuecomment-60658598</a>) 下的评论修正：</p>
+<ul>
+<li>打开菜单 <code>Bundles -&gt; Bundle Editor</code></li>
+<li>左边栏选择 <code>Input field</code> (Show) -&gt; <code>Format</code> (Show) -&gt; <code>Format SQL</code> (Show)</li>
+<li>在 “Command” 区域找到这行代码 <code>&lt;input type=&quot;hidden&quot; name=&quot;clientid&quot; value=&quot;...&quot; /&gt;</code></li>
+<li>把这个 <code>input</code> 的 <code>value</code> 改为 <code>dpriver-9094-8133-2031</code></li>
+<li>保存</li>
+</ul>
+<p>这样修改后 SQL 格式化应该可以正常工作。</p>
+<div class="tip"><br>可以发现 Sequel Pro 提供的 SQL 格式化功能是以调用远程接口服务来实现的，并不是客户端内置的原生功能，使用时也需要联网。<br></div>
+
+<h3 id="自己动手"><a href="#自己动手" class="headerlink" title="自己动手"></a>自己动手</h3><p>自带的 Bundle 修正之后基本功能没问题，但执行的时候不仅会弹出个调用远程接口的对话框，而且 SQL 的格式也不太令人满意。</p>
+<p>除了 Sequel Pro 提供的 Bundle 所使用的 SQL格式化的服务外，还有其他类似的服务同样提供了可随意调用的 API，比如 <a href="https://sqlformat.org/。" target="_blank" rel="external">https://sqlformat.org/。</a></p>
+<p>这里就以 <code>sqlformat.org</code> 为例介绍一下如何创建一个比官方更好用的自定义 SQL 格式化 Bundle。</p>
+<h4 id="打开-Bundle-编辑器"><a href="#打开-Bundle-编辑器" class="headerlink" title="打开 Bundle 编辑器"></a>打开 Bundle 编辑器</h4><p>按菜单 <code>Bundles</code> -&gt; <code>Bundle Editor</code> 打开编辑器</p>
+<img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926890939691.jpg" alt="14926890939691.jpg" title="">
+<h4 id="将侧边菜单展开到-Input-Field-gt-Format-gt-Format-SQL，右键创建一个副本。"><a href="#将侧边菜单展开到-Input-Field-gt-Format-gt-Format-SQL，右键创建一个副本。" class="headerlink" title="将侧边菜单展开到 Input Field -&gt; Format -&gt; Format SQL，右键创建一个副本。"></a>将侧边菜单展开到 <code>Input Field</code> -&gt; <code>Format</code> -&gt; <code>Format SQL</code>，右键创建一个副本。</h4><img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926892176026.jpg" alt="14926892176026.jpg" title="">
+<h4 id="更改-Bundle-配置。"><a href="#更改-Bundle-配置。" class="headerlink" title="更改 Bundle 配置。"></a>更改 Bundle 配置。</h4><img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926894425970.jpg" alt="14926894425970.jpg" title="">
+<p>注意将 <code>OutPut</code> 项更改为 <code>Replace Selection</code>，然后在 <code>Command</code> 部分贴入以下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="keyword">import</span> urllib2, urllib</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line">sql = sys.stdin.read()</div><div class="line">params = &#123;<span class="string">'sql'</span>: sql, <span class="string">'reindent'</span>: <span class="number">1</span>, <span class="string">'keyword_case'</span>: <span class="string">'upper'</span>, <span class="string">'identifier_case'</span>: <span class="string">'lower'</span>&#125;</div><div class="line">response = urllib2.urlopen(<span class="string">'https://sqlformat.org/api/v1/format'</span>, data=urllib.urlencode(params))</div><div class="line">data = json.loads(response.read())</div><div class="line"><span class="keyword">print</span> data[<span class="string">'result'</span>]</div></pre></td></tr></table></figure>
+<p>代码的功能就是调用了 <code>sqlformat.org</code> 的 API 并用格式化后的结果替换掉所选择的 SQL，代码贴完后 <code>Save</code>，从菜单里启用或者设置个快捷键看看效果吧。</p>
+<p>这样一条 SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">TYPE</span>, <span class="keyword">sum</span>(<span class="keyword">CASE</span> vender <span class="keyword">WHEN</span> <span class="string">'A'</span> <span class="keyword">THEN</span> pcs <span class="keyword">ELSE</span> <span class="number">0</span> <span class="keyword">END</span>), <span class="keyword">sum</span>(<span class="keyword">CASE</span> vender <span class="keyword">WHEN</span> <span class="string">'C'</span> <span class="keyword">THEN</span> pcs <span class="keyword">ELSE</span> <span class="number">0</span> <span class="keyword">END</span>), <span class="keyword">sum</span>(<span class="keyword">CASE</span> vender <span class="keyword">WHEN</span> <span class="string">'B'</span> <span class="keyword">THEN</span> pcs <span class="keyword">ELSE</span> <span class="number">0</span> <span class="keyword">END</span>) <span class="keyword">FROM</span> tablename t <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t1 <span class="keyword">ON</span> t1.id = t.id <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t2 <span class="keyword">ON</span> t2.id = t.id <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`type`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> t.create_time <span class="keyword">DESC</span> <span class="keyword">HAVING</span> t.cnt &gt; <span class="number">2</span></div></pre></td></tr></table></figure>
+<p>格式化之后：</p>
+<img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926907232365.jpg" alt="14926907232365.jpg" title="">
+<p><a href="https://sqlformat.org/" target="_blank" rel="external">sqlformat.org</a> 的 API 文档里还有一些可选项可以设置，比如是否大写关键字、缩进宽度、是否移除注释等，可以参考文档修改代码参数。</p>
+<ul>
+<li><a href="https://sqlformat.org/api/" target="_blank" rel="external">https://sqlformat.org/api/</a></li>
+</ul>
+<p>附 PHP 版代码，效果一致：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/php</span></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$sql = @file_get_contents(<span class="string">"php://stdin"</span>);</div><div class="line"></div><div class="line">$req = [</div><div class="line">	<span class="string">'reindent'</span> =&gt; <span class="number">1</span>,</div><div class="line">	<span class="string">'sql'</span> =&gt; $sql,</div><div class="line">	<span class="string">'keyword_case'</span> =&gt; <span class="string">'upper'</span>,</div><div class="line">	<span class="string">'identifier_case'</span> =&gt; <span class="string">'lower'</span>,</div><div class="line">];</div><div class="line"></div><div class="line">$ch = curl_init();</div><div class="line">curl_setopt($ch, CURLOPT_URL, <span class="string">'https://sqlformat.org/api/v1/format'</span>);</div><div class="line">curl_setopt($ch, CURLOPT_POST, count($req));</div><div class="line">curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));</div><div class="line">curl_setopt($ch, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>);</div><div class="line">$ret = curl_exec($ch);</div><div class="line">curl_close($ch);</div><div class="line"></div><div class="line"><span class="keyword">echo</span> json_decode($ret, <span class="keyword">true</span>)[<span class="string">'result'</span>];</div></pre></td></tr></table></figure>
+<p>懒得折腾，下载打包好的 Bundle 直接导入即可：</p>
+<blockquote>
+<p><a href="http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle" target="_blank" rel="external">http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle</a></p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。&lt;/p&gt;
+&lt;p&gt;在工
+    
+    </summary>
+    
+    
+      <category term="SQL" scheme="http://newton.sh/tags/SQL/"/>
+    
+      <category term="Mac" scheme="http://newton.sh/tags/Mac/"/>
+    
+  </entry>
   
   <entry>
     <title>Go Range 内部实现</title>
@@ -165,7 +229,7 @@
     <link href="http://newton.sh/2017/02/10/PHP-%E5%8D%8F%E7%A8%8B%E5%8E%9F%E7%90%86/"/>
     <id>http://newton.sh/2017/02/10/PHP-协程原理/</id>
     <published>2017-02-10T09:34:28.000Z</published>
-    <updated>2017-04-10T04:34:50.000Z</updated>
+    <updated>2017-04-13T14:52:51.000Z</updated>
     
     <content type="html"><![CDATA[<p>实现 PHP 协程需要了解的基本内容。<br><a id="more"></a></p>
 <h2 id="多进程-线程"><a href="#多进程-线程" class="headerlink" title="多进程/线程"></a>多进程/线程</h2><p>最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始有了进程的概念。最早的服务器端程序一般都是 Accept 一个客户端连接就创建一个进程，然后子进程进入循环同步阻塞地与客户端连接进行交互，收发处理数据。</p>
