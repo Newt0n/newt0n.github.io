@@ -3,10 +3,8 @@
 <p>在工具的选择上一向偏爱简洁够用就好，最初用 Mac 时反复比较了多个可选项最终选择了开源的 Sequel Pro 作为首选客户端，和之前在 Win 上主要用的 SQLyog 相比，界面操作之类的都可以习惯，唯独 SQL 格式化功能始终不能忍受。</p>
 <h2 id="自带格式化功能入口"><a href="#自带格式化功能入口" class="headerlink" title="自带格式化功能入口"></a>自带格式化功能入口</h2><p>Sequel Pro 的 SQL 格式化功能以 Bundle 也就是插件的形式提供，使用菜单 <code>Bundles-&gt;Input Field-&gt;Format-&gt;Format SQL</code> 执行。</p>
 <img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14925125535553.jpg" alt="14925125535553.jpg" title="">
-<p><img src="media/14925125535553.jpg" alt=""></p>
 <h2 id="修正自带-Bundle"><a href="#修正自带-Bundle" class="headerlink" title="修正自带 Bundle"></a>修正自带 Bundle</h2><p>官方版本自带的 Bundle 很可能无法开箱即用：</p>
 <img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14925128749849.png" alt="14925128749849.png" title="">
-<p><img src="media/14925128749849.png" alt=""></p>
 <p>可以根据这个 Issue (<a href="https://github.com/sequelpro/sequelpro/issues/1988#issuecomment-60658598" target="_blank" rel="external">https://github.com/sequelpro/sequelpro/issues/1988#issuecomment-60658598</a>) 下的评论修正：</p>
 <ul>
 <li>打开菜单 <code>Bundles -&gt; Bundle Editor</code></li>
@@ -20,15 +18,12 @@
 
 <h2 id="自己动手"><a href="#自己动手" class="headerlink" title="自己动手"></a>自己动手</h2><p>自带的 Bundle 修正之后基本功能没问题，但执行的时候不仅会弹出个调用远程接口的对话框，而且 SQL 的格式也不太令人满意。</p>
 <p>除了 Sequel Pro 提供的 Bundle 所使用的 SQL格式化的服务外，还有其他类似的服务同样提供了可随意调用的 API，比如 <a href="https://sqlformat.org/" target="_blank" rel="external">https://sqlformat.org/</a>。</p>
-<p>这里就以 <code>sqlformat.org</code> 为例介绍一下如何创建一个比官方更好用的自定义 SQL 格式化 Bundle。</p>
+<p>这里就以 <a href="https://sqlformat.org/" target="_blank" rel="external">sqlformat.org</a> 为例介绍一下如何创建一个比官方更好用的自定义 SQL 格式化 Bundle。</p>
 <h3 id="打开-Bundle-编辑器"><a href="#打开-Bundle-编辑器" class="headerlink" title="打开 Bundle 编辑器"></a>打开 Bundle 编辑器</h3><p>按菜单 <code>Bundles</code> -&gt; <code>Bundle Editor</code> 打开编辑器</p>
 <img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926890939691.jpg" alt="14926890939691.jpg" title="">
-<p><img src="media/14926890939691.jpg" alt=""></p>
 <h3 id="创建-Bundle"><a href="#创建-Bundle" class="headerlink" title="创建 Bundle"></a>创建 Bundle</h3><p>将侧边菜单展开到 <code>Input Field</code> -&gt; <code>Format</code> -&gt; <code>Format SQL</code>，右键创建一个副本。</p>
 <img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926892176026.jpg" alt="14926892176026.jpg" title="">
-<p><img src="media/14926892176026.jpg" alt=""></p>
 <h3 id="配置-Bundle"><a href="#配置-Bundle" class="headerlink" title="配置 Bundle"></a>配置 Bundle</h3><img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926894425970.jpg" alt="14926894425970.jpg" title="">
-<p><img src="media/14926894425970.jpg" alt=""></p>
 <p>注意将 <code>OutPut</code> 项更改为 <code>Replace Selection</code>，然后在 <code>Command</code> 部分贴入以下代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="keyword">import</span> urllib2, urllib</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line">sql = sys.stdin.read()</div><div class="line">params = &#123;<span class="string">'sql'</span>: sql, <span class="string">'reindent'</span>: <span class="number">1</span>, <span class="string">'keyword_case'</span>: <span class="string">'upper'</span>, <span class="string">'identifier_case'</span>: <span class="string">'lower'</span>&#125;</div><div class="line">response = urllib2.urlopen(<span class="string">'https://sqlformat.org/api/v1/format'</span>, data=urllib.urlencode(params))</div><div class="line">data = json.loads(response.read())</div><div class="line"><span class="keyword">print</span> data[<span class="string">'result'</span>]</div></pre></td></tr></table></figure>
 <p>代码的功能就是调用了 <a href="https://sqlformat.org/" target="_blank" rel="external">https://sqlformat.org/</a> 的 API 并用格式化后的结果替换掉所选择的 SQL，代码贴完后 <code>Save</code>，从菜单里启用或者设置个快捷键看看效果吧。</p>
@@ -36,7 +31,6 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">TYPE</span>, <span class="keyword">sum</span>(<span class="keyword">CASE</span> vender <span class="keyword">WHEN</span> <span class="string">'A'</span> <span class="keyword">THEN</span> pcs <span class="keyword">ELSE</span> <span class="number">0</span> <span class="keyword">END</span>), <span class="keyword">sum</span>(<span class="keyword">CASE</span> vender <span class="keyword">WHEN</span> <span class="string">'C'</span> <span class="keyword">THEN</span> pcs <span class="keyword">ELSE</span> <span class="number">0</span> <span class="keyword">END</span>), <span class="keyword">sum</span>(<span class="keyword">CASE</span> vender <span class="keyword">WHEN</span> <span class="string">'B'</span> <span class="keyword">THEN</span> pcs <span class="keyword">ELSE</span> <span class="number">0</span> <span class="keyword">END</span>) <span class="keyword">FROM</span> tablename t <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t1 <span class="keyword">ON</span> t1.id = t.id <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> t2 <span class="keyword">ON</span> t2.id = t.id <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`type`</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> t.create_time <span class="keyword">DESC</span> <span class="keyword">HAVING</span> t.cnt &gt; <span class="number">2</span></div></pre></td></tr></table></figure>
 <p>格式化之后：</p>
 <img src="/2017/04/14/Sequel-Pro-SQL-Formatter/14926907232365.jpg" alt="14926907232365.jpg" title="">
-<p><img src="media/14926907232365.jpg" alt=""></p>
 <p><a href="https://sqlformat.org/" target="_blank" rel="external">sqlformat.org</a> 的 API 文档里还有一些可选项可以设置，比如是否大写关键字、缩进宽度、是否移除注释等，可以参考文档修改代码参数。</p>
 <ul>
 <li><a href="https://sqlformat.org/api/" target="_blank" rel="external">https://sqlformat.org/api/</a></li>
