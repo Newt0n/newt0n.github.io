@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-04-21T02:25:25.000Z</updated>
+  <updated>2017-04-21T02:42:52.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/"/>
     <id>http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/</id>
     <published>2017-04-14T10:19:06.000Z</published>
-    <updated>2017-04-21T02:25:25.000Z</updated>
+    <updated>2017-04-21T02:42:52.000Z</updated>
     
     <content type="html"><![CDATA[<p>说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。</p>
 <p>在工具的选择上一向偏爱简洁够用就好，最初用 Mac 时反复比较了多个可选项最终选择了开源的 Sequel Pro 作为首选客户端，和之前在 Win 上主要用的 SQLyog 相比，界面操作之类的都可以习惯，唯独 SQL 格式化功能始终不能忍受。</p>
@@ -61,7 +61,7 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/php</span></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$sql = @file_get_contents(<span class="string">"php://stdin"</span>);</div><div class="line"></div><div class="line">$req = [</div><div class="line">	<span class="string">'reindent'</span> =&gt; <span class="number">1</span>,</div><div class="line">	<span class="string">'sql'</span> =&gt; $sql,</div><div class="line">	<span class="string">'keyword_case'</span> =&gt; <span class="string">'upper'</span>,</div><div class="line">	<span class="string">'identifier_case'</span> =&gt; <span class="string">'lower'</span>,</div><div class="line">];</div><div class="line"></div><div class="line">$ch = curl_init();</div><div class="line">curl_setopt($ch, CURLOPT_URL, <span class="string">'https://sqlformat.org/api/v1/format'</span>);</div><div class="line">curl_setopt($ch, CURLOPT_POST, count($req));</div><div class="line">curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($req));</div><div class="line">curl_setopt($ch, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>);</div><div class="line">$ret = curl_exec($ch);</div><div class="line">curl_close($ch);</div><div class="line"></div><div class="line"><span class="keyword">echo</span> json_decode($ret, <span class="keyword">true</span>)[<span class="string">'result'</span>];</div></pre></td></tr></table></figure>
 <p>懒得折腾，下载打包好的 Bundle 直接导入即可：</p>
 <blockquote>
-<p><a href="http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle" target="_blank" rel="external">http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle</a></p>
+<p><a href="http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle.zip" target="_blank" rel="external">http://newt0n.github.io/2017/04/14/Sequel-Pro-SQL-Formatter/Format-SQL-Py.spBundle.zip</a></p>
 </blockquote>
 ]]></content>
     
