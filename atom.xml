@@ -234,7 +234,7 @@
     <link href="http://newton.sh/2017/02/10/PHP-%E5%8D%8F%E7%A8%8B%E5%8E%9F%E7%90%86/"/>
     <id>http://newton.sh/2017/02/10/PHP-协程原理/</id>
     <published>2017-02-10T09:34:28.000Z</published>
-    <updated>2017-04-13T14:52:51.000Z</updated>
+    <updated>2017-04-25T04:39:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>实现 PHP 协程需要了解的基本内容。<br><a id="more"></a></p>
 <h2 id="多进程-线程"><a href="#多进程-线程" class="headerlink" title="多进程/线程"></a>多进程/线程</h2><p>最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始有了进程的概念。最早的服务器端程序一般都是 Accept 一个客户端连接就创建一个进程，然后子进程进入循环同步阻塞地与客户端连接进行交互，收发处理数据。</p>
@@ -243,7 +243,7 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$serv = stream_socket_server(<span class="string">"tcp://0.0.0.0:8000"</span>, $errno, $errstr) </div><div class="line"><span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Create server failed"</span>);</div><div class="line"></div><div class="line"><span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">	$conn = stream_socket_accept($serv);</div><div class="line">	<span class="keyword">if</span> (pcntl_fork() == <span class="number">0</span>) &#123;</div><div class="line">		$request = fread($conn);</div><div class="line">		<span class="comment">// do something</span></div><div class="line">		<span class="comment">// $response = "hello world";</span></div><div class="line">		fwrite($response);</div><div class="line">		fclose($conn);</div><div class="line">		<span class="keyword">exit</span>(<span class="number">0</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>多进程/线程模型的流程是：</p>
 <p>创建一个 <code>socket</code>，绑定服务器端口（<code>bind</code>），监听端口（<code>listen</code>），在 PHP 中用 <code>stream_socket_server</code> 一个函数就能完成上面 3 个步骤，当然也可以使用更底层的<code>sockets</code> 扩展分别实现。</p>
-<p>进入 <code>while</code> 循环，阻塞在 <code>accept</code> 操作上，等待客户端连接进入。此时程序会进入随眠状态，直到有新的客户端发起 <code>connect</code> 到服务器，操作系统会唤醒此进程。<code>accept</code> 函数返回客户端连接的 <code>socket</code> 主进程在多进程模型下通过 <code>fork</code>（php: pcntl_fork）创建子进程，多线程模型下使用 <code>pthread_create</code>（php: new Thread）创建子线程。</p>
+<p>进入 <code>while</code> 循环，阻塞在 <code>accept</code> 操作上，等待客户端连接进入。此时程序会进入睡眠状态，直到有新的客户端发起 <code>connect</code> 到服务器，操作系统会唤醒此进程。<code>accept</code> 函数返回客户端连接的 <code>socket</code> 主进程在多进程模型下通过 <code>fork</code>（php: pcntl_fork）创建子进程，多线程模型下使用 <code>pthread_create</code>（php: new Thread）创建子线程。</p>
 <p>下文如无特殊声明将使用进程同时表示进程/线程。</p>
 <p>子进程创建成功后进入 <code>while</code> 循环，阻塞在 <code>recv</code>（php:fread）调用上，等待客户端向服务器发送数据。收到数据后服务器程序进行处理然后使用 <code>send</code>（php: fwrite）向客户端发送响应。长连接的服务会持续与客户端交互，而短连接服务一般收到响应就会 <code>close</code>。</p>
 <p>当客户端连接关闭时，子进程退出并销毁所有资源，主进程会回收掉此子进程。</p>
