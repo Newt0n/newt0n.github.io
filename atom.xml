@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-04-23T03:30:57.000Z</updated>
+  <updated>2017-05-09T05:16:00.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -16,11 +16,29 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Sequel Pro 实现更好的 SQL 格式化</title>
+    <title>Karabiner Elements 让 Mac 快捷键永远够用</title>
+    <link href="http://newton.sh/2017/05/09/karabiner-elements/"/>
+    <id>http://newton.sh/2017/05/09/karabiner-elements/</id>
+    <published>2017-05-09T05:14:52.000Z</published>
+    <updated>2017-05-09T05:16:00.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="Mac" scheme="http://newton.sh/tags/Mac/"/>
+    
+      <category term="Karabiner" scheme="http://newton.sh/tags/Karabiner/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Sequel Pro 如何实现更好的 SQL 格式化</title>
     <link href="http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/"/>
     <id>http://newton.sh/2017/04/14/Sequel-Pro-SQL-Formatter/</id>
     <published>2017-04-14T10:19:06.000Z</published>
-    <updated>2017-04-23T03:30:57.000Z</updated>
+    <updated>2017-05-09T05:11:56.000Z</updated>
     
     <content type="html"><![CDATA[<p>让 Mac 上的数据库管理客户端 Sequel Pro 有更好的 SQL 格式化功能。<br><a id="more"></a></p>
 <p>说起 Mac 上的数据库管理 App，靠谱的可选项并不多，除了 Win 平台同样有的老牌全功能客户端 Navicat，仅有 Sequel Pro、SQLPro Studio 等几个轻量的选择以及官方的 Workbench 和发布不久的 DataGrip。</p>
@@ -234,7 +252,7 @@
     <link href="http://newton.sh/2017/02/10/PHP-%E5%8D%8F%E7%A8%8B%E5%8E%9F%E7%90%86/"/>
     <id>http://newton.sh/2017/02/10/PHP-协程原理/</id>
     <published>2017-02-10T09:34:28.000Z</published>
-    <updated>2017-04-25T04:43:10.000Z</updated>
+    <updated>2017-04-25T14:06:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>实现 PHP 协程需要了解的基本内容。<br><a id="more"></a></p>
 <h2 id="多进程-线程"><a href="#多进程-线程" class="headerlink" title="多进程/线程"></a>多进程/线程</h2><p>最早的服务器端程序都是通过多进程、多线程来解决并发IO的问题。进程模型出现的最早，从Unix 系统诞生就开始有了进程的概念。最早的服务器端程序一般都是 Accept 一个客户端连接就创建一个进程，然后子进程进入循环同步阻塞地与客户端连接进行交互，收发处理数据。</p>

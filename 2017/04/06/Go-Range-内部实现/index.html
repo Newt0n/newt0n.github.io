@@ -123,17 +123,14 @@
 <li><a href="https://golang.org/src/runtime/hashmap.go" target="_blank" rel="external">map source code</a></li>
 <li><a href="https://golang.org/src/runtime/chan.go" target="_blank" rel="external">channel source code</a></li>
 </ul>
-<div class="post-qrcode"><div class="qrcode-desc">关注 <strong class="em">NewtonIO</strong> - 创造者们的技术与工具</div><img src="/img/wechat-mp.jpg" title="Wechat" class="qrcode-img"></div><div class="copyright"><blockquote><strong>本文链接: </strong><a href="http://newton.sh/2017/04/06/Go-Range-内部实现/index.html">http://newton.sh/2017/04/06/Go-Range-内部实现/index.html</a><div><strong>版权声明: </strong>所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank">CC BY-NC-SA 3.0 CN 许可协议 </a>进行许可，转载请注明出处。</div></blockquote></div></div><div class="post-reward"><input type="checkbox" name="reward" id="reward" hidden=""><label for="reward" class="reward-button">赞赏</label><div class="reward-text">一点鼓励</div><div class="qr-code"><label for="reward" class="qr-code-image"><img src="/img/wechat.png" title="Wechat" class="image"></label><label for="reward" class="qr-code-image"><img src="/img/alipay.png" title="Alipay" class="image"></label></div></div></article></div></main><footer><div class="paginator"><a href="/2017/04/14/Sequel-Pro-SQL-Formatter/" class="prev">PREV</a><a href="/2017/02/10/PHP-协程原理/" class="next">NEXT</a></div><div data-thread-key="2017/04/06/Go-Range-内部实现/" data-title="Go Range 内部实现" data-url="http://newton.sh/2017/04/06/Go-Range-内部实现/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"newt0n"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-     || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-
-</script><div class="copyright"><p>© 2015 - 2017 <a href="http://newton.sh">Newton</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>window._pt_lt = new Date().getTime();
+<div class="post-qrcode"><div class="qrcode-desc">关注 <strong class="em">NewtonIO</strong> - 创造者们的技术与工具</div><img src="/img/wechat-mp.jpg" title="Wechat" class="qrcode-img"></div><div class="copyright"><blockquote><strong>本文链接: </strong><a href="http://newton.sh/2017/04/06/Go-Range-内部实现/index.html">http://newton.sh/2017/04/06/Go-Range-内部实现/index.html</a><div><strong>版权声明: </strong>所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank">CC BY-NC-SA 3.0 CN 许可协议 </a>进行许可，转载请注明出处。</div></blockquote></div></div><div class="post-reward"><input type="checkbox" name="reward" id="reward" hidden=""><label for="reward" class="reward-button">赞赏</label><div class="reward-text">一点鼓励</div><div class="qr-code"><label for="reward" class="qr-code-image"><img src="/img/wechat.png" title="Wechat" class="image"></label><label for="reward" class="qr-code-image"><img src="/img/alipay.png" title="Alipay" class="image"></label></div></div></article></div></main><footer><div class="paginator"><a href="/2017/04/14/Sequel-Pro-SQL-Formatter/" class="prev">PREV</a><a href="/2017/02/10/PHP-协程原理/" class="next">NEXT</a></div><div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div><script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script><script>var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "567eb7aa19034985ae5524350615f5d3",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader('aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s', true);</script><div class="copyright"><p>© 2015 - 2017 <a href="http://newton.sh">Newton</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>window._pt_lt = new Date().getTime();
 window._pt_sp_2 = [];
 window._pt_sp_2.push('setAccount,51b5fda6');
 var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
