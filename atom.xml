@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-05-30T06:39:57.000Z</updated>
+  <updated>2017-05-09T05:11:56.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -14,24 +14,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Karabiner Elements</title>
-    <link href="http://newton.sh/2017/05/09/karabiner-elements/"/>
-    <id>http://newton.sh/2017/05/09/karabiner-elements/</id>
-    <published>2017-05-09T05:14:52.000Z</published>
-    <updated>2017-05-30T06:39:57.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="Mac" scheme="http://newton.sh/tags/Mac/"/>
-    
-      <category term="Karabiner" scheme="http://newton.sh/tags/Karabiner/"/>
-    
-  </entry>
   
   <entry>
     <title>Sequel Pro 如何实现更好的 SQL 格式化</title>
