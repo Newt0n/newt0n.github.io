@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-06-24T11:47:40.000Z</updated>
+  <updated>2017-06-24T11:51:11.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://newton.sh/2017/06/24/karabiner-elements/"/>
     <id>http://newton.sh/2017/06/24/karabiner-elements/</id>
     <published>2017-06-24T06:08:35.000Z</published>
-    <updated>2017-06-24T11:47:40.000Z</updated>
+    <updated>2017-06-24T11:51:11.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Karabiner"><a href="#Karabiner" class="headerlink" title="Karabiner"></a>Karabiner</h1><p>简单的说 <a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 就是一个修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。</p>
+    <content type="html"><![CDATA[<h1 id="Karabiner"><a href="#Karabiner" class="headerlink" title="Karabiner"></a>Karabiner</h1><p><a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 是一款 Mac 平台修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。</p>
 <h1 id="Karabiner-Elements"><a href="#Karabiner-Elements" class="headerlink" title="Karabiner Elements"></a>Karabiner Elements</h1><p>在 macOS 更新到 Sierra 版本后原来的 Karabiner 版本失效了，于是作者起了一个新的项目 <a href="https://github.com/tekezo/Karabiner-Elements" target="_blank" rel="external">Karabiner Elements</a>，简易的实现了原版本的核心功能，让 macOS Sierra 以上的用户在原 Karabiner 新版开发完成之前先凑合用上。</p>
 <h1 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h1><ul>
 <li>普通键位映射：将键盘上的某个键位映射为任意指定的其他键位。</li>
@@ -87,7 +87,7 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Karabiner&quot;&gt;&lt;a href=&quot;#Karabiner&quot; class=&quot;headerlink&quot; title=&quot;Karabiner&quot;&gt;&lt;/a&gt;Karabiner&lt;/h1&gt;&lt;p&gt;简单的说 &lt;a href=&quot;https://pqrs.org/osx/karabin
+      &lt;h1 id=&quot;Karabiner&quot;&gt;&lt;a href=&quot;#Karabiner&quot; class=&quot;headerlink&quot; title=&quot;Karabiner&quot;&gt;&lt;/a&gt;Karabiner&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://pqrs.org/osx/karabiner&quot; t
     
     </summary>
     
