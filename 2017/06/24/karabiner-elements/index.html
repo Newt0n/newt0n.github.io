@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Karabiner Elements 键位定制 · NewtonIO</title><meta name="description" content="Karabiner Elements 键位定制 - Newton"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://newton.sh/atom.xml" title="NewtonIO"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">首页</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">存档</a></li><li class="nav-list-item"><a href="https://www.douban.com/people/Mr.Jin" target="_blank" class="nav-list-link">豆瓣</a></li><li class="nav-list-item"><a href="https://github.com/newt0n" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="https://instagram.com/newtonjin" target="_blank" class="nav-list-link">INSTAGRAM</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Karabiner Elements 键位定制</h1><div class="post-tags"><a href="/tags/Mac/" class="tag-title">#Mac</a><a href="/tags/Karabiner/" class="tag-title">#Karabiner</a></div><div class="post-info">Jun 24, 2017</div><div class="post-content"><h1 id="Karabiner"><a href="#Karabiner" class="headerlink" title="Karabiner"></a>Karabiner</h1><p>简单的说 <a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 就是一个修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。</p>
+<h1 id="Karabiner-Elements"><a href="#Karabiner-Elements" class="headerlink" title="Karabiner Elements"></a>Karabiner Elements</h1><p>在 macOS 更新到 Sierra 版本后原来的 Karabiner 版本失效了，于是作者起了一个新的项目 <a href="https://github.com/tekezo/Karabiner-Elements" target="_blank" rel="external">Karabiner Elements</a>，简易的实现了原版本的核心功能，让 macOS Sierra 以上的用户在原 Karabiner 新版开发完成之前先凑合用上。</p>
+<h1 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h1><ul>
+<li>普通键位映射：将键盘上的某个键位映射为任意指定的其他键位。</li>
+<li>功能键位映射：将键盘上的功能键（Fn）映射为任意指定的其他键位。</li>
+<li>可以同时对连接到 Mac 的多个键盘设备生效。</li>
+<li>可以选择仅对特定键盘设备生效。</li>
+<li>支持虚拟键盘（ANSI, ISO, JIS）等。</li>
+<li>支持多套偏好设置，可根据场景切换使用。</li>
+</ul>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>除了官方 Github 上提供的版本外，建议安装 <a href="https://github.com/tekezo/Karabiner-Elements/pull/247" target="_blank" rel="external">这个 PR</a> 里的分支版本，提供了多个键位映射到一个键位的功能，目前还没有被合并到官方主分支。</p>
+<p>下载：<a href="https://github.com/wwwjfy/Karabiner-Elements/releases" target="_blank" rel="external">https://github.com/wwwjfy/Karabiner-Elements/releases</a></p>
+<p>安装完成后打开 Karabiner Elements，主界面如下：</p>
+<img src="/2017/06/24/karabiner-elements/14982967543253.jpg" alt="14982967543253.jpg" title="">
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="键位映射"><a href="#键位映射" class="headerlink" title="键位映射"></a>键位映射</h2><p>在 Mac 上使用外接键盘一般都会遇到部分键位和 Mac 键盘布局不匹配的问题，系统本身提供了对于功能键的映射功能，但如果你的键盘有 <code>App</code>、<code>Fn</code> 等特殊按键，系统自带的配置功能就搞不定了。</p>
+<img src="/2017/06/24/karabiner-elements/14982946693811.jpg" alt="14982946693811.jpg" title="">
+<p>而在 Karabiner 里提供的选择非常多，基本可以覆盖绝大多数外接键盘可能用的键位。</p>
+<img src="/2017/06/24/karabiner-elements/14982967198860.jpg" alt="14982967198860.jpg" title="">
+<p>简单配置 <code>From Key</code> 和 <code>To Key</code> 即可完成一条键位映射的配置：</p>
+<img src="/2017/06/24/karabiner-elements/14982970600598.jpg" alt="14982970600598.jpg" title="">
+<p>比如上图就是把 <code>App</code> 键映射到 <code>右 Command</code> 键。</p>
+<div class="tip"><br>需要注意的是 Karabiner 的配置会覆盖 macOS 自身的键盘配置，如果之前用默认的设置修改过修饰键等映射，使用 Karabiner 后都需要在 Karabiner 里配置一套相同的设置。<br></div>
+
+<h2 id="多套配置"><a href="#多套配置" class="headerlink" title="多套配置"></a>多套配置</h2><p>在界面上的 <code>Profiles</code> 标签内，可以添加、删除和选中某个配置，<code>select</code> 选中某个配置之后，所有对键位的更改都会保存在当前 <code>select</code> 的这套配置内，比如可以根据使用的键盘不同维护多套配置，以便在使用不同输入设备时切换。</p>
+<p>另外，Karabiner 的所有配置都以 <code>JSON</code> 格式文件保存在：</p>
+<blockquote>
+<p>~/.config/karabiner/karabiner.json</p>
+</blockquote>
+<p>目录，如果在网上看到别人给出的配置需要编辑 <code>karabiner.json</code> 文件加到其中，如果需要备份配置则可以直接备份这个目录。</p>
+<div class="tip"><br>Karabiner Elements 目前<strong>并不支持一个键位映射只对某一个键盘设备生效</strong>，所以使用不同的键盘设备需要手动切换配置来启用。<br>这里有 <a href="https://github.com/tekezo/Karabiner-Elements/pull/752" target="_blank" rel="external">一个 PR</a> 提供了单个映射只对指定设备生效的支持，目前还没有被合并到 master，可以关注一下。<br></div>
+
+<h2 id="Hyper-Key"><a href="#Hyper-Key" class="headerlink" title="Hyper Key"></a>Hyper Key</h2><p>所谓的 <strong>Hyper Key</strong> 就是将 <code>左 Control</code> + <code>左 Option</code> + <code>左 Command</code> + <code>左 Shift</code> 这四个键的组合键映射到某一个键上，一般映射到对大多数人都不太常用的 <code>CapsLock</code>（大小写锁定键）上，按下 <code>CapsLock</code> 键就相当于按下了以上 4 个键的组合键，这样一来可以使用 <strong><code>CapsLock</code> + 任意键</strong> 组合出一整套新的快捷键，而且几乎不会和所有第三方 App 或系统快捷键冲突，可以说是拯救了 Mac 上十分不够用的快捷键配置。</p>
+<p>如果安装了上述<a href="https://github.com/wwwjfy/Karabiner-Elements/releases" target="_blank" rel="external">非官方分支的版本</a>，可以按以下步骤来设置 <code>Hyper Key</code>：</p>
+<ol>
+<li>用任意文本编辑器打开 <code>~/.config/karabiner/</code> 文件。</li>
+<li>将下面的代码复制粘贴到红框中的位置。</li>
+<li>保存文件。</li>
+</ol>
+<p>代码：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">"one_to_many_mappings": &#123;</div><div class="line">      "caps_lock": [</div><div class="line">          "left_control",</div><div class="line">          "left_shift",</div><div class="line">          "left_option",</div><div class="line">          "left_command"</div><div class="line">      ]</div><div class="line">  &#125;,</div></pre></td></tr></table></figure></p>
+<p>复制到下图红框中的位置：</p>
+<img src="/2017/06/24/karabiner-elements/14983003863869.jpg" alt="14983003863869.jpg" title="">
+<p>这段配置即可把 <code>左 Control</code> + <code>左 Shift</code> + <code>左 Option</code> + <code>左 Command</code> 映射到 <code>CapsLock</code> 键上。</p>
+<p>可以看到 Karabiner 所有的配置描述都并列的写在了 <code>profiles</code> 这个 key 里面。</p>
+<div class="tip"><br>添加配置描述的时候需要看清楚当前添加的是哪套配置文件，比如上面例子里添加的配置就属于 <code>PCKeyboard</code> 这套配置文件。<br></div>
+
+<p>有了 <code>HyperKey</code> 再配合上 Keyboard Maestro 这样的工作流效率工具，基本上就是图形界面版的 AHK（AutoHotKey）。</p>
+<h2 id="Alfred-Workflow"><a href="#Alfred-Workflow" class="headerlink" title="Alfred Workflow"></a>Alfred Workflow</h2><p>很多时候都可能需要维护不止一套配置，比如在办公室或家里会用外接键盘，带着笔记本出门一般只会用 Mac 自带的键盘，而 Karabiner 默认是通过点击菜单栏图标来切换配置：</p>
+<img src="/2017/06/24/karabiner-elements/14983014591849.jpg" alt="14983014591849.jpg" title="">
+<p>不仅需要鼠标精确操作而且常驻一个除此之外并没有太多卵用的菜单栏图标，这里提供一个快速切换配置的 AlfredWorkflow：</p>
+<p>默认关键词 <code>kep</code>，选择配置名称完成切换，全键盘操作：</p>
+<img src="/2017/06/24/karabiner-elements/14983016279993.jpg" alt="14983016279993.jpg" title="">
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><h2 id="Karabiner-EventViewer"><a href="#Karabiner-EventViewer" class="headerlink" title="Karabiner EventViewer"></a>Karabiner EventViewer</h2><p>Karabiner 提供了查看每个键位代码名称的工具 <code>Karabiner-EventViewer</code>，打开该工具，随后的所有按键操作都会在界面上显示明细，如果有不清楚名称的按键，查看界面中 <code>name</code> 一栏，配置映射时选择对应名称的键位即可。</p>
+<img src="/2017/06/24/karabiner-elements/14983023161858.jpg" alt="14983023161858.jpg" title="">
+<p>对我而言 Karabiner 最主要的用途就是用配置的 <code>HyperKey</code> 配合 Keyboard Maestro 来实现各种定制化快捷操作，相比以前在 Win 上用 AHK，给我的感觉是功能和灵活性不输，图形界面则更佳方便易用，有空会再分享一篇 Keyboard Maestro 的使用场景。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://github.com/tekezo/Karabiner-Elements/" target="_blank" rel="external">https://github.com/tekezo/Karabiner-Elements/</a></li>
+<li><a href="https://github.com/wwwjfy/Karabiner-Elements/" target="_blank" rel="external">https://github.com/wwwjfy/Karabiner-Elements/</a></li>
+<li><a href="https://github.com/tekezo/Karabiner-Elements/pull/752" target="_blank" rel="external">https://github.com/tekezo/Karabiner-Elements/pull/752</a></li>
+<li><a href="https://github.com/tekezo/Karabiner-Elements/pull/247" target="_blank" rel="external">https://github.com/tekezo/Karabiner-Elements/pull/247</a></li>
+</ul>
+<div class="post-qrcode"><div class="qrcode-desc">关注 <strong class="em">NewtonIO</strong> - 创造者们的技术与工具</div><img src="/img/wechat-mp.jpg" title="Wechat" class="qrcode-img"></div><div class="copyright"><blockquote><strong>本文链接: </strong><a href="http://newton.sh/2017/06/24/karabiner-elements/index.html">http://newton.sh/2017/06/24/karabiner-elements/index.html</a><div><strong>版权声明: </strong>所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank">CC BY-NC-SA 3.0 CN 许可协议 </a>进行许可，转载请注明出处。</div></blockquote></div></div><div class="post-reward"><input type="checkbox" name="reward" id="reward" hidden=""><label for="reward" class="reward-button">赞赏</label><div class="reward-text">一点鼓励</div><div class="qr-code"><label for="reward" class="qr-code-image"><img src="/img/wechat.png" title="Wechat" class="image"></label><label for="reward" class="qr-code-image"><img src="/img/alipay.png" title="Alipay" class="image"></label></div></div></article></div></main><footer><div class="paginator"><a href="/2017/04/14/Sequel-Pro-SQL-Formatter/" class="next">NEXT</a></div><div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div><script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script><script>var cloudTieConfig = {
+    url: document.location.href,
+    sourceId: "2017/06/24/karabiner-elements/",
+    productKey: "567eb7aa19034985ae5524350615f5d3",
+    target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);</script><div class="copyright"><p>© 2015 - 2017 <a href="http://newton.sh">Newton</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>window._pt_lt = new Date().getTime();
+window._pt_sp_2 = [];
+window._pt_sp_2.push('setAccount,51b5fda6');
+var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+(function() {
+    var atag = document.createElement('script'); atag.type = 'text/javascript'; atag.async = true;
+    atag.src = _protocol + 'js.ptengine.cn/51b5fda6.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(atag, s);
+})();</script></body></html>
