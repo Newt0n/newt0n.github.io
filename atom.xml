@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-06-24T16:12:36.000Z</updated>
+  <updated>2017-08-07T10:06:16.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -16,11 +16,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Keyboard Maestro 一键即达的效率神奇</title>
+    <link href="http://newton.sh/2017/08/05/keyboard-maestro/"/>
+    <id>http://newton.sh/2017/08/05/keyboard-maestro/</id>
+    <published>2017-08-05T06:35:24.000Z</published>
+    <updated>2017-08-07T10:06:16.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。<br>关于 Keyboard Maestro（以下简称 KB） 本身的介绍和基本使用可以拜读少数派的<a href="https://sspai.com/post/36442" target="_blank" rel="external">这篇长文</a>，很详细覆盖也很全面，本篇主要记录分享下我个人使用中的一些用例和场景。</p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>只要我们的任务可以被<strong>分解为多个目的单一的小步骤，步骤与步骤之间可以通过标准输入输出传递数据串起来</strong>，这个任务就很可能可以使用 KB 来简化操作。</p>
+<p><img src="media/tech-0-1.png" alt="tech-0"></p>
+<p>在 KB 里作为触发器的就是一组快捷键，为了解决 macOS 上可用的快捷键总是捉襟见肘的情况，可以参考上一篇<a href="http://newton.sh/2017/06/24/karabiner-elements/">《Karabiner Elements 键位定制神器》</a>先配置一下 <code>Hyper Key</code>，可以尽可能的避免快捷键冲突问题。</p>
+<h2 id="快捷键启动（切换）任意应用"><a href="#快捷键启动（切换）任意应用" class="headerlink" title="快捷键启动（切换）任意应用"></a>快捷键启动（切换）任意应用</h2><p>快捷键直接启动指定应用程序，这应该是最简单直接的应用场景，系统默认的 <code>Cmd + Tab</code> 显然总是无法 Get 到我到底想要切换哪个 App…最直接的方式就是给要切换的 App 钦定一个快捷键，无论在什么窗口下直接按下指定的快捷键就能马上脉动回来。<br>工作里我切换频率最高的 App 差不多是 Sublime、iTerm2、微信、QQ、Sequel Pro、AirMail、Chrome 和 Firefox。<br>以 Sublime 为例，我设置的快捷键为 <code>Ctrl + Alt + Shift + Cmd + s</code>，其中 <code>Ctrl + Alt + Shift + Cmd</code> 是 <code>Hyper Key</code>，实际操作只需要按下 <code>CapsLock + s</code>：</p>
+<p><img src="media/15020295730202-1.jpg" alt="15020295730202"></p>
+<h2 id="快捷键映射组合键"><a href="#快捷键映射组合键" class="headerlink" title="快捷键映射组合键"></a>快捷键映射组合键</h2><h2 id="快捷键执行-Shell-Apple-Script"><a href="#快捷键执行-Shell-Apple-Script" class="headerlink" title="快捷键执行 Shell/Apple Script"></a>快捷键执行 Shell/Apple Script</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Keyboard-Maestro&quot;&gt;&lt;a href=&quot;#Keyboard-Maestro&quot; class=&quot;headerlink&quot; title=&quot;Keyboard Maestro&quot;&gt;&lt;/a&gt;Keyboard Maestro&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https
+    
+    </summary>
+    
+    
+      <category term="Mac" scheme="http://newton.sh/tags/Mac/"/>
+    
+      <category term="Keyboard Maestro" scheme="http://newton.sh/tags/Keyboard-Maestro/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Karabiner Elements 键位定制神器</title>
     <link href="http://newton.sh/2017/06/24/karabiner-elements/"/>
     <id>http://newton.sh/2017/06/24/karabiner-elements/</id>
     <published>2017-06-24T06:08:35.000Z</published>
-    <updated>2017-06-24T16:12:36.000Z</updated>
+    <updated>2017-08-07T10:05:59.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="Karabiner"><a href="#Karabiner" class="headerlink" title="Karabiner"></a>Karabiner</h1><p><a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 是一款 Mac 平台修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。</p>
 <h1 id="Karabiner-Elements"><a href="#Karabiner-Elements" class="headerlink" title="Karabiner Elements"></a>Karabiner Elements</h1><p>在 macOS 更新到 Sierra 版本后原来的 Karabiner 版本失效了，于是作者起了一个新的项目 <a href="https://github.com/tekezo/Karabiner-Elements" target="_blank" rel="external">Karabiner Elements</a>，简易的实现了原版本的核心功能，让 macOS Sierra 以上的用户在原 Karabiner 新版开发完成之前先凑合用上。</p>
@@ -161,9 +189,9 @@
     </summary>
     
     
-      <category term="SQL" scheme="http://newton.sh/tags/SQL/"/>
-    
       <category term="Mac" scheme="http://newton.sh/tags/Mac/"/>
+    
+      <category term="SQL" scheme="http://newton.sh/tags/SQL/"/>
     
   </entry>
   
