@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-08-12T12:01:13.000Z</updated>
+  <updated>2017-08-12T12:04:22.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,10 +20,11 @@
     <link href="http://newton.sh/2017/08/05/keyboard-maestro/"/>
     <id>http://newton.sh/2017/08/05/keyboard-maestro/</id>
     <published>2017-08-05T06:35:24.000Z</published>
-    <updated>2017-08-12T12:01:13.000Z</updated>
+    <updated>2017-08-12T12:04:22.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器。<br><a id="more"></a></p>
-<h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。<br>关于 Keyboard Maestro（以下简称 KM） 本身的介绍和基本使用可以先行拜读少数派的<a href="https://sspai.com/post/36442" target="_blank" rel="external">这篇长文</a>，很详细覆盖也很全面，本篇主要记录分享下我个人使用中的一些用例和场景。</p>
+<h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。</p>
+<p>关于 Keyboard Maestro（以下简称 KM） 本身的介绍和基本使用可以先行拜读少数派的<a href="https://sspai.com/post/36442" target="_blank" rel="external">这篇长文</a>，很详细覆盖也很全面，本篇主要记录分享下我个人使用中的一些用例和场景。</p>
 <h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>只要我们的任务可以被<strong>分解为多个目的单一的小步骤，步骤与步骤之间可以通过标准输入输出传递数据串起来</strong>，这个任务就很可能可以使用 KM 来简化操作。</p>
 <img src="/2017/08/05/keyboard-maestro/tech-0-1.png" alt="tech-0-1.png" title="">
 <div class="tip"><br>在 KM 里作为触发器的就是一组快捷键，为了解决 macOS 上可用的快捷键总是捉襟见肘的情况，可以参考上一篇<a href="http://newton.sh/2017/06/24/karabiner-elements/">《Karabiner Elements 键位定制神器》</a>先配置一下 <code>Hyper Key</code>，可以尽可能的避免快捷键冲突问题。<br></div>
