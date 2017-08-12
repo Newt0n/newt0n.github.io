@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-08-07T10:09:16.000Z</updated>
+  <updated>2017-08-12T12:01:13.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -16,23 +16,94 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Keyboard Maestro 一键即达的效率神奇</title>
+    <title>Keyboard Maestro 一键即达的效率神器</title>
     <link href="http://newton.sh/2017/08/05/keyboard-maestro/"/>
     <id>http://newton.sh/2017/08/05/keyboard-maestro/</id>
     <published>2017-08-05T06:35:24.000Z</published>
-    <updated>2017-08-07T10:09:16.000Z</updated>
+    <updated>2017-08-12T12:01:13.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。<br>关于 Keyboard Maestro（以下简称 KB） 本身的介绍和基本使用可以拜读少数派的<a href="https://sspai.com/post/36442" target="_blank" rel="external">这篇长文</a>，很详细覆盖也很全面，本篇主要记录分享下我个人使用中的一些用例和场景。</p>
-<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>只要我们的任务可以被<strong>分解为多个目的单一的小步骤，步骤与步骤之间可以通过标准输入输出传递数据串起来</strong>，这个任务就很可能可以使用 KB 来简化操作。</p>
-<p><img src="media/tech-0-1.png" alt="tech-0"></p>
-<p>在 KB 里作为触发器的就是一组快捷键，为了解决 macOS 上可用的快捷键总是捉襟见肘的情况，可以参考上一篇<a href="http://newton.sh/2017/06/24/karabiner-elements/">《Karabiner Elements 键位定制神器》</a>先配置一下 <code>Hyper Key</code>，可以尽可能的避免快捷键冲突问题。</p>
-<h2 id="快捷键启动（切换）任意应用"><a href="#快捷键启动（切换）任意应用" class="headerlink" title="快捷键启动（切换）任意应用"></a>快捷键启动（切换）任意应用</h2><p>快捷键直接启动指定应用程序，这应该是最简单直接的应用场景，系统默认的 <code>Cmd + Tab</code> 显然总是无法 Get 到我到底想要切换哪个 App…最直接的方式就是给要切换的 App 钦定一个快捷键，无论在什么窗口下直接按下指定的快捷键就能马上脉动回来。<br>工作里我切换频率最高的 App 差不多是 Sublime、iTerm2、微信、QQ、Sequel Pro、AirMail、Chrome 和 Firefox。<br>以 Sublime 为例，我设置的快捷键为 <code>Ctrl + Alt + Shift + Cmd + s</code>，其中 <code>Ctrl + Alt + Shift + Cmd</code> 是 <code>Hyper Key</code>，实际操作只需要按下 <code>CapsLock + s</code>：</p>
-<p><img src="media/15020295730202-1.jpg" alt="15020295730202"></p>
-<h2 id="快捷键映射组合键"><a href="#快捷键映射组合键" class="headerlink" title="快捷键映射组合键"></a>快捷键映射组合键</h2><h2 id="快捷键执行-Shell-Apple-Script"><a href="#快捷键执行-Shell-Apple-Script" class="headerlink" title="快捷键执行 Shell/Apple Script"></a>快捷键执行 Shell/Apple Script</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1>]]></content>
+    <content type="html"><![CDATA[<p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器。<br><a id="more"></a></p>
+<h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。<br>关于 Keyboard Maestro（以下简称 KM） 本身的介绍和基本使用可以先行拜读少数派的<a href="https://sspai.com/post/36442" target="_blank" rel="external">这篇长文</a>，很详细覆盖也很全面，本篇主要记录分享下我个人使用中的一些用例和场景。</p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>只要我们的任务可以被<strong>分解为多个目的单一的小步骤，步骤与步骤之间可以通过标准输入输出传递数据串起来</strong>，这个任务就很可能可以使用 KM 来简化操作。</p>
+<img src="/2017/08/05/keyboard-maestro/tech-0-1.png" alt="tech-0-1.png" title="">
+<div class="tip"><br>在 KM 里作为触发器的就是一组快捷键，为了解决 macOS 上可用的快捷键总是捉襟见肘的情况，可以参考上一篇<a href="http://newton.sh/2017/06/24/karabiner-elements/">《Karabiner Elements 键位定制神器》</a>先配置一下 <code>Hyper Key</code>，可以尽可能的避免快捷键冲突问题。<br></div>
+
+<h2 id="快捷键启动（切换）任意应用"><a href="#快捷键启动（切换）任意应用" class="headerlink" title="快捷键启动（切换）任意应用"></a>快捷键启动（切换）任意应用</h2><p>快捷键直接启动指定应用程序，这应该是最简单直接的应用场景，系统默认的 <code>Cmd + Tab</code> 显然总是无法 Get 到我到底想要切换哪个 App…最直接的方式就是给要切换的 App 钦定一个快捷键，无论在什么窗口下直接按下指定的快捷键就能马上脉动回来。</p>
+<p>以 Sublime 为例，我设置的快捷键为 <code>Ctrl + Alt + Shift + Cmd + s</code>，其中 <code>Ctrl + Alt + Shift + Cmd</code> 是 <code>Hyper Key</code>，实际操作只需要按下 <code>CapsLock + s</code>：</p>
+<img src="/2017/08/05/keyboard-maestro/15020295730202.jpg" alt="15020295730202.jpg" title="">
+<p>与此类似，我给一些工作里切换频率最高的 App 如 Sublime、iTerm2、微信、QQ、Sequel Pro、AirMail、Chrome 和 Firefox 等都设置了一键直达，切换起来酣畅淋漓。</p>
+<h2 id="快捷键映射组合键"><a href="#快捷键映射组合键" class="headerlink" title="快捷键映射组合键"></a>快捷键映射组合键</h2><p>在浏览器里切换标签页，主流浏览器的快捷键基本都是：</p>
+<ul>
+<li><code>Alt + Shift + t</code>，恢复最近关闭的标签。</li>
+<li><code>Ctrl + Shift + Tab</code>，切换上一个标签。</li>
+<li><code>Ctrl + Tab</code>，切换下一个标签。</li>
+<li><code>Cmd + w</code>，关闭当前标签。</li>
+</ul>
+<p>记忆和单手操作起来都没有那么方便，而且的我的浏览习惯是同时开多个标签放着，然后一个个去看，有时候查资料会频繁来回切换多个页面的内容做参考，所以对我来说这几个快捷键的使用频率很高。</p>
+<p>在 KM 里我给这些快捷键做了映射：</p>
+<ul>
+<li><code>F1</code> -&gt; 恢复最近关闭的标签。</li>
+<li><code>F2</code> -&gt; 切换上一个标签。</li>
+<li><code>F3</code> -&gt; 切换下一个标签。</li>
+<li><code>F4</code> -&gt; 关闭当前标签。</li>
+</ul>
+<p>浏览多个标签时，左手放在键盘最上面那一行，操作距离极短且记忆成本很低，效率高到飞起。</p>
+<h2 id="快捷键执行脚本"><a href="#快捷键执行脚本" class="headerlink" title="快捷键执行脚本"></a>快捷键执行脚本</h2><p>最强大的莫过于执行脚本了，允许执行脚本基本就意味着 you can do whatever you want，随便举几个例子：</p>
+<h3 id="清空回车站"><a href="#清空回车站" class="headerlink" title="清空回车站"></a>清空回车站</h3><p>虽然忘掉手动清空回收站并设置一段时间自动清空回收站是更优雅的做法，但相信太多的强迫症患者看到 Dock 上塞满的回收站图标都忍不住手动将它清空。</p>
+<p>这里不想讨论为什么史蒂夫多年来一直不肯给 macOS 加上类似 Windows 的更方便点的直接删除（不经过回收站）快捷键，只以清空回收站作为例子来说明 KM 的用法。</p>
+<img src="/2017/08/05/keyboard-maestro/15025228256102.jpg" alt="15025228256102.jpg" title="">
+<p>图中的配置，按下 <code>Ctrl + Shift + Cmd + E</code> 会执行一段 AppleScript，代码如下：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">tell</span> <span class="built_in">application</span> <span class="string">"Finder"</span></div><div class="line">	empty trash <span class="keyword">with</span> security</div><div class="line"><span class="keyword">end</span> <span class="keyword">tell</span></div></pre></td></tr></table></figure>
+<p>脚本的功能就是执行清空回收站的操作，一秒解救强迫症。</p>
+<p>更强大的是不止能执行 AppleScript，还能执行 Swift 和 Shell 等，能执行 Shell 也就意味着什么不该做的事你都可以做 😂。</p>
+<img src="/2017/08/05/keyboard-maestro/15025231818781.jpg" alt="15025231818781.jpg" title="">
+<h3 id="开关-Wifi-网络"><a href="#开关-Wifi-网络" class="headerlink" title="开关 Wifi 网络"></a>开关 Wifi 网络</h3><p>因为公司工位的有线网比无线网要稳定很多，所以只要在工位上我就会插上网线断开 Wifi，在会议室或者回家后则会打开 Wifi，所以对我来说开关 Wifi 也是一个平均每天都会用的操作。</p>
+<p>常规的操作当然是鼠标点击任务栏中的网络图标然后关闭，一来需要精确定位，二来需要两次操作，每天都需要操作的话也是很烦。所以我在 KM 里配了一个快捷键专门来实现开关 Wifi：</p>
+<img src="/2017/08/05/keyboard-maestro/15025370436789.jpg" alt="15025370436789.jpg" title="">
+<p>这个配置中首先定义了一个快捷键 <code>Hyper Key + n</code>，当快捷键被按下时：</p>
+<ol>
+<li>执行一段 Shell 脚本，来实现检查 Wifi 状态并切换状态（<code>Execute text script</code>）。</li>
+<li>开关操作完成后，弹出一个通知信息，显示目前的 Wifi 状态（<code>Notification</code>）。</li>
+</ol>
+<p>Shell 代码为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line">device=$(networksetup -listallhardwareports | grep -E <span class="string">'(Wi-Fi|AirPort)'</span> -A 1 | grep -o en.)</div><div class="line">[[ <span class="string">"<span class="variable">$(networksetup -getairportpower $device)</span>"</span> == *On ]] &amp;&amp; v=off || v=on</div><div class="line">networksetup -setairportpower <span class="variable">$device</span> <span class="variable">$v</span></div><div class="line"><span class="built_in">echo</span> <span class="variable">$v</span></div></pre></td></tr></table></figure>
+<p>注意图中有一个配置项 <code>Save to variable</code>，意思是把 Shell 脚本的输出内容存放到一个变量中，这个例子里变量名为 <code>Status</code></p>
+<p>通知部分：</p>
+<ol>
+<li><code>Title</code> 填写 <code>%ExecutingMacro%</code> 表示标题会显示当前执行的配置名称，也就是图中的『Wifi Toggle』。</li>
+<li><code>Message</code> 中填写 <code>Wifi is %Variable%Status%.</code>，<code>%Variable%Status%</code> 部分表示会取用上一步 Action 所保存的变量 <code>Status</code> 的内容。</li>
+</ol>
+<p>最终按下快捷键时的效果：</p>
+<img src="/2017/08/05/keyboard-maestro/15025376867405.jpg" alt="15025376867405.jpg" title="">
+<h2 id="快捷键执行工作流"><a href="#快捷键执行工作流" class="headerlink" title="快捷键执行工作流"></a>快捷键执行工作流</h2><p>以上列举的几个场景为了尽量简单都只涉及到通过快捷键触发一个 Action 的情况，单个 Action 已经可以实现很多简单的高效操作，但更复杂的操作还是得靠多个 Action 串联起来形成工作流才能实现，这也正是 KM 和 Alfred 类似的工作流概念强大的地方。</p>
+<h3 id="查有道词典"><a href="#查有道词典" class="headerlink" title="查有道词典"></a>查有道词典</h3><p>虽然 Mac 上或者浏览器里有一万种取词查词的方法，但我还是会有一些场景下想要打开有道词典看看更详细的释义和例句，然后添加到单词本方便后续记忆。</p>
+<p>手动操作：</p>
+<ol>
+<li>选中文本。</li>
+<li><code>Cmd + c</code> 复制选中文本。</li>
+<li>双击有道图标或者 Alfred 打开。</li>
+<li><code>Cmd + v</code> 粘贴复制的文本。</li>
+</ol>
+<p>KM 工作流：</p>
+<ol>
+<li>按下快捷键，一步搞定。</li>
+</ol>
+<img src="/2017/08/05/keyboard-maestro/15025254568016.jpg" alt="15025254568016.jpg" title="">
+<p>这个配置的核心是通过一个快捷键触发 <strong>复制文本、打开应用、粘贴文本</strong> 等一系列的操作，来最终完成一个相对复杂一些的任务。</p>
+<p>可惜的是有道词典一直到目前的版本都还没有提供添加单词本的快捷键，不然添加单词本的操作也可以一气呵成在这一个工作流里。</p>
+<p>类似的场景其实工作中还有很多，将任务分解然后结合 KM 提供的各种 Action 组合完成，效率陡增，事半功倍。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然 Windows 上的 AHK 更为灵活，配合上 Spy++ 获取窗体控件 ID 更是能把上述例子里的单词本快捷键都加上去，但过于灵活和强大的同时，通常也意味着更高的复杂性和上手难度。</p>
+<p>个人觉得 Keyboard Maestro 在功能强大和易用性之间找到了一个良好的平衡点，在上手难度不那么大的前提下可以变换出众多带来极大效率提升的组合，和 Alfred 并称 macOS 效率神器并不为过。</p>
+<p>本篇只是粗浅的记录一些自己实际使用的例子，要解决更多实际的痛点还得仔细分析拆解自己的使用场景，结合 KM 种类繁多的 Action，或多或少一定能带来效率的提升，日积月累，节省出来的时间，多赚点钱或多陪陪心爱的人，随便干点什么都好 :D</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://wiki.keyboardmaestro.com/User_Manual" target="_blank" rel="external">Keyboard Maestro Wiki</a></li>
+<li><a href="https://sspai.com/post/36442" target="_blank" rel="external">Keyboard Maestro 入门指南</a></li>
+</ul>
+]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Keyboard-Maestro&quot;&gt;&lt;a href=&quot;#Keyboard-Maestro&quot; class=&quot;headerlink&quot; title=&quot;Keyboard Maestro&quot;&gt;&lt;/a&gt;Keyboard Maestro&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https
+      &lt;p&gt;&lt;a href=&quot;https://www.keyboardmaestro.com/main/&quot;&gt;Keyboard Maestro&lt;/a&gt; 是一款 macOS 平台类似 Alfred 的效率神器。&lt;br&gt;
     
     </summary>
     
@@ -48,9 +119,10 @@
     <link href="http://newton.sh/2017/06/24/karabiner-elements/"/>
     <id>http://newton.sh/2017/06/24/karabiner-elements/</id>
     <published>2017-06-24T06:08:35.000Z</published>
-    <updated>2017-08-07T10:05:59.000Z</updated>
+    <updated>2017-08-12T11:36:12.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Karabiner"><a href="#Karabiner" class="headerlink" title="Karabiner"></a>Karabiner</h1><p><a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 是一款 Mac 平台修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。</p>
+    <content type="html"><![CDATA[<p><a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 是一款 Mac 平台修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。<br><a id="more"></a></p>
+<h1 id="Karabiner"><a href="#Karabiner" class="headerlink" title="Karabiner"></a>Karabiner</h1><p><a href="https://pqrs.org/osx/karabiner" target="_blank" rel="external">Karabiner</a> 是一款 Mac 平台修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。</p>
 <h1 id="Karabiner-Elements"><a href="#Karabiner-Elements" class="headerlink" title="Karabiner Elements"></a>Karabiner Elements</h1><p>在 macOS 更新到 Sierra 版本后原来的 Karabiner 版本失效了，于是作者起了一个新的项目 <a href="https://github.com/tekezo/Karabiner-Elements" target="_blank" rel="external">Karabiner Elements</a>，简易的实现了原版本的核心功能，让 macOS Sierra 以上的用户在原 Karabiner 新版开发完成之前先凑合用上。</p>
 <h1 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h1><ul>
 <li>普通键位映射：将键盘上的某个键位映射为任意指定的其他键位。</li>
@@ -115,7 +187,7 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Karabiner&quot;&gt;&lt;a href=&quot;#Karabiner&quot; class=&quot;headerlink&quot; title=&quot;Karabiner&quot;&gt;&lt;/a&gt;Karabiner&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://pqrs.org/osx/karabiner&quot; t
+      &lt;p&gt;&lt;a href=&quot;https://pqrs.org/osx/karabiner&quot;&gt;Karabiner&lt;/a&gt; 是一款 Mac 平台修改键位映射的软件，有任何需要更改键位默认行为的需求都可以尝试用 Karabiner 做相应的映射，开源且免费。&lt;br&gt;
     
     </summary>
     
