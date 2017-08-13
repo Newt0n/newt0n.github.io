@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-08-12T12:06:27.000Z</updated>
+  <updated>2017-08-13T04:08:58.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://newton.sh/2017/08/05/keyboard-maestro/"/>
     <id>http://newton.sh/2017/08/05/keyboard-maestro/</id>
     <published>2017-08-05T06:35:24.000Z</published>
-    <updated>2017-08-12T12:06:27.000Z</updated>
+    <updated>2017-08-13T04:08:58.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器。<br><a id="more"></a></p>
 <h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。</p>
@@ -51,7 +51,7 @@
 <p>浏览多个标签时，左手放在键盘最上面那一行，操作距离极短且记忆成本很低，效率高到飞起。</p>
 <h2 id="快捷键执行脚本"><a href="#快捷键执行脚本" class="headerlink" title="快捷键执行脚本"></a>快捷键执行脚本</h2><p>最强大的莫过于执行脚本了，允许执行脚本基本就意味着 you can do whatever you want，随便举几个例子：</p>
 <h3 id="清空回车站"><a href="#清空回车站" class="headerlink" title="清空回车站"></a>清空回车站</h3><p>虽然忘掉手动清空回收站并设置一段时间自动清空回收站是更优雅的做法，但相信太多的强迫症患者看到 Dock 上塞满的回收站图标都忍不住手动将它清空。</p>
-<p>这里不想讨论为什么史蒂夫多年来一直不肯给 macOS 加上类似 Windows 的更方便点的直接删除（不经过回收站）快捷键，只以清空回收站作为例子来说明 KM 的用法。</p>
+<p>这里不讨论为什么 Apple 直到最近的版本才给 macOS 加上了直接删除（不经过回收站）快捷键（<code>Option + Alt + Del</code>），只以清空回收站作为例子来说明 KM 的用法。</p>
 <img src="/2017/08/05/keyboard-maestro/15025228256102.jpg" alt="15025228256102.jpg" title="">
 <p>图中的配置，按下 <code>Ctrl + Shift + Cmd + E</code> 会执行一段 AppleScript，代码如下：</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">tell</span> <span class="built_in">application</span> <span class="string">"Finder"</span></div><div class="line">	empty trash <span class="keyword">with</span> security</div><div class="line"><span class="keyword">end</span> <span class="keyword">tell</span></div></pre></td></tr></table></figure>
