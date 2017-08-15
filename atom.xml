@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://newton.sh/"/>
-  <updated>2017-08-13T04:08:58.000Z</updated>
+  <updated>2017-08-13T09:35:57.000Z</updated>
   <id>http://newton.sh/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://newton.sh/2017/08/05/keyboard-maestro/"/>
     <id>http://newton.sh/2017/08/05/keyboard-maestro/</id>
     <published>2017-08-05T06:35:24.000Z</published>
-    <updated>2017-08-13T04:08:58.000Z</updated>
+    <updated>2017-08-13T09:35:57.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器。<br><a id="more"></a></p>
 <h1 id="Keyboard-Maestro"><a href="#Keyboard-Maestro" class="headerlink" title="Keyboard Maestro"></a>Keyboard Maestro</h1><p><a href="https://www.keyboardmaestro.com/main/" target="_blank" rel="external">Keyboard Maestro</a> 是一款 macOS 平台类似 Alfred 的效率神器，其核心思想也是以一个触发器（Trigger）操作触发一连串组合动作（Action）来高效便捷的完成复杂任务，同时也十分符合『一个程序只实现一个功能，组合小程序完成复杂任务』的 Linux 哲学。</p>
@@ -93,7 +93,7 @@
 <p>这个配置的核心是通过一个快捷键触发 <strong>复制文本、打开应用、粘贴文本</strong> 等一系列的操作，来最终完成一个相对复杂一些的任务。</p>
 <p>可惜的是有道词典一直到目前的版本都还没有提供添加单词本的快捷键，不然添加单词本的操作也可以一气呵成在这一个工作流里。</p>
 <p>类似的场景其实工作中还有很多，将任务分解然后结合 KM 提供的各种 Action 组合完成，效率陡增，事半功倍。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>虽然 Windows 上的 AHK 更为灵活，配合上 Spy++ 获取窗体控件 ID 更是能把上述例子里的单词本快捷键都加上去，但过于灵活和强大的同时，通常也意味着更高的复杂性和上手难度。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>虽然 Windows 上的 AHK 更为灵活，配合上 Spy++ 获取窗体控件 ID 更是能把上述例子里的单词本快捷键都加上去，但过于灵活和强大的同时，通常也意味着更高的复杂性和上手难度。</p>
 <p>个人觉得 Keyboard Maestro 在功能强大和易用性之间找到了一个良好的平衡点，在上手难度不那么大的前提下可以变换出众多带来极大效率提升的组合，和 Alfred 并称 macOS 效率神器并不为过。</p>
 <p>本篇只是粗浅的记录一些自己实际使用的例子，要解决更多实际的痛点还得仔细分析拆解自己的使用场景，结合 KM 种类繁多的 Action，或多或少一定能带来效率的提升，日积月累，节省出来的时间，多赚点钱或多陪陪心爱的人，随便干点什么都好 :D</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
